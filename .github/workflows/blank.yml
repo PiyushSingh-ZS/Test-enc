@@ -47,6 +47,7 @@ jobs:
       - name: Run a multi-line script
         run: |
           touch gcp-values.yaml
+          touch gcp-values1.yaml
           echo app_name="$app_name" >> gcp-values.yaml
 
           echo cluster_name="$cluster_name" >> gcp-values.yaml
@@ -70,31 +71,16 @@ jobs:
          
       - name: Run a multi-line script
         run: 
-          env >> gcp-values.yaml
-          |
-          
-          echo "cat gcp-values.yaml"
-          cat gcp-values.yaml
-
-
-          echo "ls -a ."
-          ls -a .
-
-          echo "ls -a ${{ github.workspace }}"
-          ls -a ${{ github.workspace }}
-        shell: bash
+          env >> gcp-values1.yaml
+         
       - name: Run a multi-line script
         run: |
-          
-          echo "cat gcp-values.yaml"
+          echo "cat gcp-values1.yaml"
           cat gcp-values.yaml
 
 
           echo "ls -a ."
           ls -a .
-
-          echo "ls -a ${{ github.workspace }}"
-          ls -a ${{ github.workspace }}
         shell: bash
       
         
