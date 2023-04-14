@@ -40,9 +40,15 @@ jobs:
         run: echo Hello, world!
 
       # Runs a set of commands using the runners shell
+      - name: Run a env file
+        run: 
+          echo env >> gcp-values1.yaml
+
+      
       - name: Run a multi-line script
         run: |
           touch gcp-values.yaml
+          touch gcp-values1.yaml
           echo app_name="$app_name" >> gcp-values.yaml
           echo cluster_name="$cluster_name" >> gcp-values.yaml
           echo project_name="$project_name">> gcp-values.yaml
@@ -54,6 +60,8 @@ jobs:
           echo "$env" >> gcp-values.yaml
           echo "cat gcp-values.yaml"
           cat gcp-values.yaml
+          echo "cat gcp-values1.yaml"
+          cat gcp-values1.yaml
 
           echo "ls -a ."
           ls -a .
@@ -64,4 +72,4 @@ jobs:
         
       - name: Run a env file
         run: 
-          echo env
+          echo env >> gcp-values1.yaml
