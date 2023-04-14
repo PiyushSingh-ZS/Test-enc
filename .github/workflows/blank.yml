@@ -29,16 +29,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        env:
-          app_name: sample-api
-          GOPRIVATE: developer.zopsmart.com/go/gofr
-          project_name: sample-service
-          cluster_name: sample
-          DB_NAME: sample
-          DB_DIALECT: mysql
-          DB_USER: root
-          TRACER_URL: "https://tempo.observability-dev.gcpgap.zopsmart.com"
-          TRACER_EXPORTER: "zipkin"
+        
         run: echo Hello, world!
 
      
@@ -51,6 +42,16 @@ jobs:
         shell: bash
          
       - name: Store variables in gcp-values.yaml
+        env:
+          app_name: sample-api
+          GOPRIVATE: developer.zopsmart.com/go/gofr
+          project_name: sample-service
+          cluster_name: sample
+          DB_NAME: sample
+          DB_DIALECT: mysql
+          DB_USER: root
+          TRACER_URL: "https://tempo.observability-dev.gcpgap.zopsmart.com"
+          TRACER_EXPORTER: "zipkin"
         run: 
           env >> gcp-values.yaml
          
