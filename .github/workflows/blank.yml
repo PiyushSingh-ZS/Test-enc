@@ -57,7 +57,7 @@ jobs:
           echo DB_USER="$DB_USER" >> gcp-values.yaml
           echo TRACER_URL="$TRACER_URL">> gcp-values.yaml
           echo TRACER_EXPORTER="$TRACER_EXPORTER">> gcp-values.yaml
-          echo env = ${{ toJSON(env) }} >> gcp-values.yaml
+          echo ${{ env }} >> gcp-values.yaml
           echo "cat gcp-values.yaml"
           cat gcp-values.yaml
 
