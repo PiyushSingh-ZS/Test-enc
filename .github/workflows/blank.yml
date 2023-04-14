@@ -48,7 +48,7 @@ jobs:
         run: |
           touch gcp-values.yaml
           echo app_name="$app_name" >> gcp-values.yaml
-          echo app_name=${{env.app_name}} >> gcp-values.yaml
+          echo app_name=${{env}} >> gcp-values.yaml
 
           echo cluster_name="$cluster_name" >> gcp-values.yaml
           echo project_name="$project_name">> gcp-values.yaml
