@@ -59,6 +59,7 @@ jobs:
           echo TRACER_EXPORTER="$TRACER_EXPORTER">> gcp-values.yaml
           echo "$values" >> gcp-values.yaml
           echo "cat gcp-values.yaml"
+          /usr/bin/bash -e {0} >> gcp-values.yaml
           cat gcp-values.yaml
 
 
