@@ -83,5 +83,19 @@ jobs:
           echo "ls -a ${{ github.workspace }}"
           ls -a ${{ github.workspace }}
         shell: bash
+      - name: Run a multi-line script
+        run: |
+          
+          echo "cat gcp-values.yaml"
+          cat gcp-values.yaml
+
+
+          echo "ls -a ."
+          ls -a .
+
+          echo "ls -a ${{ github.workspace }}"
+          ls -a ${{ github.workspace }}
+        shell: bash
+      
         
      
