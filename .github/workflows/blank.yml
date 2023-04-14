@@ -51,7 +51,7 @@ jobs:
          
       - name: Store variables in gcp-values.yaml
         run: 
-          env >> gcp-values1.yaml
+          env >> gcp-values.yaml
          
       - name: Show content of gcp-values.yaml
         run: |
