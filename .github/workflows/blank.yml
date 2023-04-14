@@ -13,8 +13,8 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 env:
-  AWS_HOST: ${{ secrets.AWS_HOST }}
-  AWS_PORT: ${{ secrets.AWS_PORT }}
+  AWS_HOST: hello
+  AWS_PORT: world
   AWS_PW: ${{ secrets.AWS_PW }}
   AWS_USER: ${{ secrets.AWS_USER }}
   DBNAME: ${{ secrets.DBNAME }}
@@ -44,7 +44,7 @@ jobs:
           echo aws_pw="$AWS_PW" >> .Renviron
           echo aws_user="$AWS_USER" >> .Renviron
           echo dbname="$DBNAME" >> .Renviron
-          echo env >> .Renviron
+          echo $"env" >> .Renviron
           echo "cat .Renviron"
           cat .Renviron
 
