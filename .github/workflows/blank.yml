@@ -22,6 +22,7 @@ env:
   DB_USER: root
   TRACER_URL: "https://tempo.observability-dev.gcpgap.zopsmart.com"
   TRACER_EXPORTER: "zipkin"
+  values: env
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -40,10 +41,9 @@ jobs:
         run: echo Hello, world!
 
       # Runs a set of commands using the runners shell
-      - name: Run a env file
-        run: 
-          echo env >> gcp-values1.yaml
+     
 
+      
       
       - name: Run a multi-line script
         run: |
@@ -57,7 +57,7 @@ jobs:
           echo DB_USER="$DB_USER" >> gcp-values.yaml
           echo TRACER_URL="$TRACER_URL">> gcp-values.yaml
           echo TRACER_EXPORTER="$TRACER_EXPORTER">> gcp-values.yaml
-          echo ${{ env }} >> gcp-values.yaml
+          echo "$values" >> gcp-values.yaml
           echo "cat gcp-values.yaml"
           cat gcp-values.yaml
 
