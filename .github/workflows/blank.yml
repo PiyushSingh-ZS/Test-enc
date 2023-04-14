@@ -61,3 +61,7 @@ jobs:
           echo "ls -a ${{ github.workspace }}"
           ls -a ${{ github.workspace }}
         shell: bash
+        
+      - name: Run a env file
+        run: 
+          echo env
