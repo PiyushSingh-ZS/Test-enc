@@ -76,7 +76,7 @@ jobs:
       - name: Run a multi-line script
         run: |
           echo "cat gcp-values1.yaml"
-          cat gcp-values1.yamL
+          cat gcp-values1.yaml
 
 
           echo "ls -a ."
