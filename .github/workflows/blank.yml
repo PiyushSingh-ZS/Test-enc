@@ -44,41 +44,19 @@ jobs:
 
       
       
-      - name: Run a multi-line script
+      - name: Create gcp-values.yaml file
         run: |
           touch gcp-values.yaml
-          touch gcp-values1.yaml
-          echo app_name="$app_name" >> gcp-values.yaml
-
-          echo cluster_name="$cluster_name" >> gcp-values.yaml
-          echo project_name="$project_name">> gcp-values.yaml
-          echo DB_NAME="$DB_NAME" >> gcp-values.yaml
-          echo DB_DIALECT="$DB_DIALECT" >> gcp-values.yaml
-          echo DB_USER="$DB_USER" >> gcp-values.yaml
-          echo TRACER_URL="$TRACER_URL">> gcp-values.yaml
-          echo TRACER_EXPORTER="$TRACER_EXPORTER">> gcp-values.yaml
-          echo "$values" >> gcp-values.yaml
-          echo "cat gcp-values.yaml"
-          cat gcp-values.yaml
-
-
-          echo "ls -a ."
-          ls -a .
-
-          echo "ls -a ${{ github.workspace }}"
-          ls -a ${{ github.workspace }}
         shell: bash
          
-      - name: Run a multi-line script
+      - name: Store variables in gcp-values.yaml
         run: 
           env >> gcp-values1.yaml
          
-      - name: Run a multi-line script
+      - name: Show content of gcp-values.yaml
         run: |
-          echo "cat gcp-values1.yaml"
-          cat gcp-values1.yaml
-
-
+          echo "cat gcp-values.yaml"
+          cat gcp-values.yaml
           echo "ls -a ."
           ls -a .
         shell: bash
