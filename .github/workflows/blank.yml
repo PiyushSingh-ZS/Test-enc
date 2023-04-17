@@ -23,7 +23,6 @@ env:
           DB_USER: root
           TRACER_URL: "https://tempo.observability-dev.gcpgap.zopsmart.com"
           TRACER_EXPORTER: "zipkin"
-          image: gcr.io/${{ env.project_name }}/${{env.app_name}}:${{ github.sha }}
 
 
 
@@ -53,6 +52,9 @@ jobs:
         run: |
           touch gcp-values.yaml
         shell: bash
+        env: 
+            image: gcr.io/${{ env.project_name }}/${{env.app_name}}:${{ github.sha }}
+
         
       
       - name: Store variables in gcp-values.yaml
