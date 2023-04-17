@@ -28,7 +28,7 @@ env:
             maxCPU: "1.5"
             cs: ${{github.sha}}
             COMMIT_SHA: ${GITHUB_SHA::12}
-            image1: gcr.io/${ project_name} /${ name }:${ COMMIT_SHA } 
+        
             
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -58,8 +58,7 @@ jobs:
       
       - name: Create gcp-values.yaml file
         run: |
-          echo ${{env.image}}
-          echo ${{env.image1}}
+          echo gcr.io/${{ env.project_name}} /${{env.name }}:${{ env.COMMIT_SHA }} 
           touch gcp-values.yaml
         shell: bash
         
