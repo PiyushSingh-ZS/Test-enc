@@ -23,7 +23,6 @@ env:
           DB_USER: root
           TRACER_URL: "https://tempo.observability-dev.gcpgap.zopsmart.com"
           TRACER_EXPORTER: "zipkin"
-          image1: gcr.io/${{env.project_name}}/${{env.app_name}}:${{ github.sha }}
 
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -60,7 +59,7 @@ jobs:
         run: 
           env >> gcp-values.yaml
         env: 
-            image: gcr.io/${{ env.project_name }}/${{ env.app_name }}:${{ github.sha }}
+            image: gcr.io/${{ env.project_name }}/${{ env.app_name }}:"${{ github.sha }}".SubString(0, 8))
          
       - name: Show content of gcp-values.yaml
         run: |
