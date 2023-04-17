@@ -21,8 +21,8 @@ env:
             DB_NAME: ""
             DB_DIALECT: ""
             DB_USER: ""
-            env.TRACER_URL: "https://tempo.observability-dev.gcpgap.zopsmart.com"
-            env.TRACER_EXPORTER: "zipkin"
+            TRACER_URL: "https://tempo.observability-dev.gcpgap.zopsmart.com"
+            TRACER_EXPORTER: "zipkin"
             minMemory: "512Mi"
             maxMemory: "1Gi"
             maxCPU: "1.5"
@@ -73,8 +73,8 @@ jobs:
         run: |
           echo "cat gcp-values.yaml"
           echo env: >> gcp-values.yaml
-          echo "  TRACER_URL=${{env.env.TRACER_URL}}" >> gcp-values.yaml
-          echo "  TRACER_EXPORTER=${{env.env.TRACER_EXPORTER}}" >> gcp-values.yaml
+          echo "  TRACER_URL: $TRACER_URL" >> gcp-values.yaml
+          echo "  TRACER_EXPORTER: $TRACER_EXPORTER" >> gcp-values.yaml
 
           cat gcp-values.yaml
           echo "ls -a ."
