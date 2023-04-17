@@ -45,6 +45,7 @@ jobs:
       - name: Loop over env
         run: 
             echo env_vars
+            echo ${{ fromJSON(env)}}
       
 
      
