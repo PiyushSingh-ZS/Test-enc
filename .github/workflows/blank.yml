@@ -58,7 +58,8 @@ jobs:
       
       - name: Create gcp-values.yaml file
         run: |
-          echo gcr.io/${{ env.project_name}} /${{env.name }}:${{ env.COMMIT_SHA }} 
+          echo gcr.io/${{ env.project_name}}/${{env.name }}:${{ env.COMMIT_SHA }} 
+          echo "image=`echo gcr.io/${{ env.project_name }}/${{ env.name }}:${{ env.COMMIT_SHA }}`"
           touch gcp-values.yaml
         shell: bash
         
