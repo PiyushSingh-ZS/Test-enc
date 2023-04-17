@@ -81,6 +81,7 @@ jobs:
         run: |
           sed -i 's/=/: /' gcp-values.yaml
           sed -i 's/***/hello: world/' gcp-values.yaml
+        shell: bash
           
       - name: Show content of gcp-values.yaml
         run: |
