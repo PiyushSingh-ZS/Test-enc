@@ -37,7 +37,11 @@ jobs:
     
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-
+      - name: Add image and short sha
+        run: 
+          echo "SHORT_SHA=$("${{ github.sha }}".SubString(0, 8))" >> $env:GITHUB_ENV
+          echo "image=$(gcr.io/${{ env.project_name }}/${{ env.app_name }}:${{ env.SHORT_SHA }})" >> $env:GITHUB_ENV
+        
       # Runs a single command using the runners shell
       - name: Run a one-line script
         
