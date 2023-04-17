@@ -18,9 +18,9 @@ env:
           GOPRIVATE: developer.zopsmart.com/go/gofr
           project_name: sample-service
           cluster_name: sample
-          DB_NAME: sample
-          DB_DIALECT: mysql
-          DB_USER: root
+          DB_NAME: ""
+          DB_DIALECT: ""
+          DB_USER: ""
           env.TRACER_URL: "https://tempo.observability-dev.gcpgap.zopsmart.com"
           env.TRACER_EXPORTER: "zipkin"
 
