@@ -46,7 +46,8 @@ jobs:
      
 
       - name: Add SHORT_SHA env property with commit short sha
-        run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+        run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-12`" >> $GITHUB_ENV
+        
       - name: Add imageenv property 
         run: echo "image=`echo gcr.io/${{ env.project_name }}/${{ env.app_name }}:${{ env.SHORT_SHA }} `" >> $GITHUB_ENV
       
