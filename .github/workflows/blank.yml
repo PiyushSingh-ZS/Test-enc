@@ -26,7 +26,7 @@ env:
             minMemory: "512Mi"
             maxMemory: "1Gi"
             maxCPU: "1.5"
-            COMMIT_SHA: "echo ${GITHUB_SHA} | cut -c1-12"
+            COMMIT_SHA: ${GITHUB_SHA} | cut -c1-12
 
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
