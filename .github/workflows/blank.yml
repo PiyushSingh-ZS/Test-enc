@@ -53,7 +53,7 @@ jobs:
       
       - name: Create gcp-values.yaml file
         run: |
-          echo {{env.image}}
+          echo ${{env.image}}
           touch gcp-values.yaml
         shell: bash
         
