@@ -26,8 +26,7 @@ env:
             minMemory: "512Mi"
             maxMemory: "1Gi"
             maxCPU: "1.5"
-            cs: ${{github.sha}}
-            COMMIT_SHA: ${GITHUB_SHA::12}
+      
         
             
 
@@ -40,6 +39,7 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+  
     
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
@@ -53,13 +53,13 @@ jobs:
       
 
       - name: Add image env property with commit sha tag
-        run: echo "image=`echo gcr.io/${{ env.project_name }}/${{ env.name }}:${{ env.COMMIT_SHA }} `" >> $GITHUB_ENV
+        run: echo "image=`echo gcr.io/${{ env.project_name }}/${{ env.name }}:${{ github.sha}} `" >> $GITHUB_ENV
 
       
       - name: Create gcp-values.yaml file
+     
         run: |
-          echo gcr.io/${{ env.project_name}}/${{env.name }}:${{ env.COMMIT_SHA }} 
-          echo `gcr.io/${{ env.project_name }}/${{ env.name }}:${{ env.COMMIT_SHA }}`
+          echo gcr.io/${{ env.project_name }}/${{ env.name }}:${{ github.sha}}
           touch gcp-values.yaml
         shell: bash
         
