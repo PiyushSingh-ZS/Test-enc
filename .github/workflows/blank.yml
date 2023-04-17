@@ -61,8 +61,7 @@ jobs:
       - name: Store variables in gcp-values.yaml
         run: 
           env >> gcp-values.yaml
-        env: 
-            image1: gcr.io/${{ env.project_name }}/${{ env.app_name }}:${{ env.SHORT_SHA }}        
+             
       - name: Show content of gcp-values.yaml
         run: |
           echo "cat gcp-values.yaml"
