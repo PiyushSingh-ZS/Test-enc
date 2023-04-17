@@ -43,7 +43,7 @@ jobs:
      
       # Runs a single command using the runners shell
       - name: Loop over env
-        run: env_vars=( ${{ fromJSON(env) }} )
+        run: 
             echo env_vars
       
 
