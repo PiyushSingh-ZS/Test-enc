@@ -59,8 +59,7 @@ jobs:
         run: 
           env >> gcp-values.yaml
         env: 
-            image: gcr.io/${{ env.project_name }}/${{ env.app_name }}:${GITHUB_SHA::7}
-         
+            image: gcr.io/${{ env.project_name }}/${{ env.app_name }}:${{GITHUB_SHA::7}}        
       - name: Show content of gcp-values.yaml
         run: |
           echo "cat gcp-values.yaml"
