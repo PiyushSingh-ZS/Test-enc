@@ -28,7 +28,7 @@ env:
             maxCPU: "1.5"
             cs: ${{github.sha}}
             COMMIT_SHA: ${GITHUB_SHA::12}
-            image1: ${echo gcr.io/${{ env.project_name }}/${{ env.name }}:${{ env.COMMIT_SHA }} }
+            image1: ${echo gcr.io/${ env.project_name }/${ env.name }:${ env.COMMIT_SHA } }
             
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
