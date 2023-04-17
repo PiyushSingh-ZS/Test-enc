@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
 
 env:
-            name: sample-api
+            app_name: sample-api
             GOPRIVATE: developer.zopsmart.com/go/gofr
             project_name: platform-379911
             cluster_name: headless-services-dev
