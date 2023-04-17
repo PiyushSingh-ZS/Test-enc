@@ -52,14 +52,15 @@ jobs:
         run: |
           touch gcp-values.yaml
         shell: bash
-        env: 
-            image: gcr.io/${{ env.project_name }}/${{env.app_name}}:${{ github.sha }}
+        
 
         
       
       - name: Store variables in gcp-values.yaml
         run: 
           env >> gcp-values.yaml
+        env: 
+            image: gcr.io/${{ env.project_name }}/${{env.app_name}}:${{ github.sha }}
          
       - name: Show content of gcp-values.yaml
         run: |
