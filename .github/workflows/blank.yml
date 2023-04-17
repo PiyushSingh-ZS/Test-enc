@@ -45,11 +45,12 @@ jobs:
 
      
 
-      - name: Add SHORT_SHA env property with commit short sha
-        run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-12`" >> $GITHUB_ENV
-        
-      - name: Add imageenv property 
-        run: echo "image=`echo gcr.io/${{ env.project_name }}/${{ env.app_name }}:${{ env.SHORT_SHA }} `" >> $GITHUB_ENV
+      - name: Add COMMIT_SHA env property with commit short sha
+        run: echo "COMMIT_SHA=`echo ${GITHUB_SHA} | cut -c1-12`" >> $GITHUB_ENV
+
+      - name: Add image env property with commit sha tag
+        run: echo "image=`echo gcr.io/${{ env.project_name }}/${{ env.name }}:${{ env.COMMIT_SHA }} `" >> $GITHUB_ENV
+
       
       - name: Create gcp-values.yaml file
         run: |
