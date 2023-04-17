@@ -80,7 +80,7 @@ jobs:
       - name: replace
         run: |
           sed -i 's/=/: /' gcp-values.yaml
-          sed -i 's/name/hello: world/' gcp-values.yaml
+          sed -i -e 's/***/hello: world/' gcp-values.yaml
         shell: bash
           
       - name: Show content of gcp-values.yaml
