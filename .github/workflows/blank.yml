@@ -21,8 +21,8 @@ env:
           DB_NAME: sample
           DB_DIALECT: mysql
           DB_USER: root
-          TRACER_URL: "https://tempo.observability-dev.gcpgap.zopsmart.com"
-          TRACER_EXPORTER: "zipkin"
+          env.TRACER_URL: "https://tempo.observability-dev.gcpgap.zopsmart.com"
+          env.TRACER_EXPORTER: "zipkin"
 
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
