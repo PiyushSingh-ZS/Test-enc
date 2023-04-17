@@ -27,7 +27,7 @@ env:
             maxMemory: "1Gi"
             maxCPU: "1.5"
             cs: ${{github.sha}}
-            COMMIT_SHA: "${GITHUB_SHA} | cut -c1-12"
+            COMMIT_SHA: ${{GITHUB_SHA}} | cut -c1-12
             
             
 
