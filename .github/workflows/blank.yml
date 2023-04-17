@@ -69,6 +69,14 @@ jobs:
       - name: Store variables in gcp-values.yaml
         run: 
           env >> gcp-values.yaml
+      - name: Show content of gcp-values.yaml ==
+        run: |
+          echo "cat gcp-values.yaml"
+          cat gcp-values.yaml
+          echo "ls -a ."
+          ls -a .
+        shell: bash
+      
       - name: replace
         run: |
           sed -i 's/=/: /' gcp-values.yaml
