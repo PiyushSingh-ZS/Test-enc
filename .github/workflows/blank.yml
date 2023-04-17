@@ -53,7 +53,7 @@ jobs:
           TRACER_URL: "https://tempo.observability-dev.gcpgap.zopsmart.com"
           TRACER_EXPORTER: "zipkin"
         run: 
-          env::vars()
+          echo env::vars()
          
       - name: Show content of gcp-values.yaml for loop
         run: |
