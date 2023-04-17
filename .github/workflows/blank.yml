@@ -23,7 +23,7 @@ env:
           DB_USER: root
           TRACER_URL: "https://tempo.observability-dev.gcpgap.zopsmart.com"
           TRACER_EXPORTER: "zipkin"
-
+          image1: gcr.io/${{ vars.project_name }}/${{vars.app_name}}:${{ github.sha }}
 
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
