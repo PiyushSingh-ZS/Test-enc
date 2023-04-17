@@ -14,15 +14,18 @@ on:
   workflow_dispatch:
 
 env:
-          app_name: sample-api
-          GOPRIVATE: developer.zopsmart.com/go/gofr
-          project_name: sample-service
-          cluster_name: sample
-          DB_NAME: ""
-          DB_DIALECT: ""
-          DB_USER: ""
-          env.TRACER_URL: "https://tempo.observability-dev.gcpgap.zopsmart.com"
-          env.TRACER_EXPORTER: "zipkin"
+            name: sample-api
+            GOPRIVATE: developer.zopsmart.com/go/gofr
+            project_name: platform-379911
+            cluster_name: headless-services-dev
+            DB_NAME: ""
+            DB_DIALECT: ""
+            DB_USER: ""
+            env.TRACER_URL: "https://tempo.observability-dev.gcpgap.zopsmart.com"
+            env.TRACER_EXPORTER: "zipkin"
+            minMemory: "512Mi"
+            maxMemory: "1Gi"
+            maxCPU: "1.5"
 
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
