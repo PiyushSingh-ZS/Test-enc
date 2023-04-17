@@ -80,6 +80,8 @@ jobs:
       - name: replace
         run: |
           sed -i 's/=/: /' gcp-values.yaml
+          sed -i 's/***//' gcp-values.yaml
+          
       - name: Show content of gcp-values.yaml
         run: |
           echo "cat gcp-values.yaml"
