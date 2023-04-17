@@ -72,6 +72,8 @@ jobs:
       - name: Show content of gcp-values.yaml ==
         run: |
           echo "cat gcp-values.yaml"
+          echo env: >> gcp-values.yaml
+          echo "  hello" >> gcp-values.yaml
           cat gcp-values.yaml
           echo "ls -a ."
           ls -a .
