@@ -26,6 +26,7 @@ env:
             minMemory: "512Mi"
             maxMemory: "1Gi"
             maxCPU: "1.5"
+            COMMIT_SHA: "echo ${GITHUB_SHA} | cut -c1-12"
 
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -42,16 +43,12 @@ jobs:
       - uses: actions/checkout@v3
      
       # Runs a single command using the runners shell
-      - name: Loop over env
-        run: 
-            echo env_vars
-            echo ${{ fromJSON(env)}}
+  
       
 
      
 
-      - name: Add COMMIT_SHA env property with commit short sha
-        run: echo "COMMIT_SHA=`echo ${GITHUB_SHA} | cut -c1-12`" >> $GITHUB_ENV
+      
 
       - name: Add image env property with commit sha tag
         run: echo "image=`echo gcr.io/${{ env.project_name }}/${{ env.name }}:${{ env.COMMIT_SHA }} `" >> $GITHUB_ENV
