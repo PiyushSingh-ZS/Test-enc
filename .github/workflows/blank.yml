@@ -73,7 +73,9 @@ jobs:
         run: |
           echo "cat gcp-values.yaml"
           echo env: >> gcp-values.yaml
-          echo "  hello" >> gcp-values.yaml
+          echo "  TRACER_URL=${{env.TRACER_URL}}" >> gcp-values.yaml
+          echo "  TRACER_EXPORTER=${{env.TRACER_EXPORTER}}" >> gcp-values.yaml
+
           cat gcp-values.yaml
           echo "ls -a ."
           ls -a .
