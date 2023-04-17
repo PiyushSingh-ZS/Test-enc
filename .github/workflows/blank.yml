@@ -40,7 +40,31 @@ jobs:
         run: |
           touch gcp-values.yaml
         shell: bash
+        
+      - name: Store variables in gcp-values.yaml for loop
+        env:
+          app_name: sample-api
+          GOPRIVATE: developer.zopsmart.com/go/gofr
+          project_name: sample-service
+          cluster_name: sample
+          DB_NAME: sample
+          DB_DIALECT: mysql
+          DB_USER: root
+          TRACER_URL: "https://tempo.observability-dev.gcpgap.zopsmart.com"
+          TRACER_EXPORTER: "zipkin"
+        run: 
+          for (name, val) in env::vars() {
+          echo name=val >> gcp-values.yaml
+              }
          
+      - name: Show content of gcp-values.yaml for loop
+        run: |
+          echo "cat gcp-values.yaml"
+          cat gcp-values.yaml
+          echo "ls -a ."
+          ls -a .
+        shell: bash
+        
       - name: Store variables in gcp-values.yaml
         env:
           app_name: sample-api
