@@ -96,7 +96,7 @@ jobs:
         shell: bash
         
       - id: imageOut
-        run: echo "image=`echo gcr.io/${{ env.project_name }}/${{ env.app_name }}:${{ github.sha }}`" >> "$GITHUB_OUTPUT"
+        run: echo "image=docker image" >> "$GITHUB_OUTPUT"
     outputs:
       output1: ${{ steps.imageOut.outputs.image }}
   docker:
