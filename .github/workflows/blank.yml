@@ -31,12 +31,14 @@ env:
             
 jobs:
   dockerize:
+
     runs-on: ubuntu-latest
  
     outputs:
       image: ${{ steps.output-image.outputs.image }}
     steps:
       - name: hello
+     
         run: echo ${{ env.image }}
       - id: output-image
         run: echo "image=`echo gcr.io/${{ env.project_name }}/${{ env.name }}:${{ github.sha }}`"  >> "$GITHUB_OUTPUT"
@@ -44,7 +46,7 @@ jobs:
   job2:
     runs-on: ubuntu-latest
     env:
-          image: ${{jobs.needs.dockerize.outputs.image}}
+          image: ${{jobs.dockerize.outputs.image}}
     steps:
     
       - name: echo image
