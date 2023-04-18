@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     # Map a step output to a job output
     outputs:
-      image: ${{ steps.step1.outputs.image }}
+      image: ${{ steps.output-image.outputs.image }}
     steps:
       - id: output-image
         run: echo "image=`echo gcr.io/${{ env.project_name }}/${{ env.name }}:${{ github.sha }}`" >> "$GITHUB_OUTPUT"
