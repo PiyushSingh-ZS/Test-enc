@@ -44,5 +44,5 @@ jobs:
     needs: dockerize
     steps:
       - env:
-          OUTPUT1: ${{needs.dockerize.output-image.image}}
+          OUTPUT1: ${{needs.dockerize.outpus.image}}
         run: echo "$OUTPUT1"
