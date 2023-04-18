@@ -45,8 +45,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: dockerize
     env:
-          OUTPUT1: ${{needs.dockerize.outputs.image}}
+          image: ${{needs.dockerize.outputs.image}}
     steps:
     
       - name: hello
-        run: echo "$OUTPUT1"
+        run: echo ${{ env.image }}
