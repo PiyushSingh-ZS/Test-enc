@@ -47,4 +47,5 @@ jobs:
     steps:
       - env:
           OUTPUT1: ${{needs.dockerize.outputs.image}}
+      - name: hello
         run: echo "$OUTPUT1"
