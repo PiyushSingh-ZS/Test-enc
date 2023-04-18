@@ -36,6 +36,8 @@ jobs:
     outputs:
       image: ${{ steps.output-image.outputs.image }}
     steps:
+      - name: hello
+        run: echo hello
       - id: output-image
         run: echo "image=`echo gcr.io/${{ env.project_name }}/${{ env.name }}:${{ github.sha }}`" >> "$GITHUB_OUTPUT"
     
