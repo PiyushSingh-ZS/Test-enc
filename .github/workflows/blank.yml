@@ -33,7 +33,7 @@ jobs:
   dockerize:
     runs-on: ubuntu-latest
     env: 
-      image: gcr.io/"$project_name"/"$name":${{ github.sha }}
+      image: echo "gcr.io/"$project_name"/"$name":${{ github.sha }}"
     # Map a step output to a job output
     outputs:
       image: ${{ steps.output-image.outputs.image }}
