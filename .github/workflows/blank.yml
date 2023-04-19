@@ -51,5 +51,10 @@ jobs:
     steps:
     
       - name: echo image
-        run: echo ${{ env.image }}
+        run: ${{ env.image }} > image.txt
+      - name: Upload math result for job 1
+        uses: actions/upload-artifact@v3
+        with:
+          name: homework
+          path: image.txt
       
