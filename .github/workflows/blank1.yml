@@ -17,5 +17,5 @@ jobs:
     name: Some Workflow Work
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Some work"
+      - run: echo "Some work got triggered form ci"
 
