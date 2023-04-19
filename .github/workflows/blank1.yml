@@ -1,25 +1,21 @@
 # This is a basic workflow to help you get started with Actions
 
-name: workflow 2
+
 
 # Controls when the workflow will run
+name: Workflow Work
+ 
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  repository_dispatch:
-    types: [trigger-workflow-2]
-
-
-
-  # Allows you to run this workflow manually from the Actions tab
+  workflow_run:
+    workflows: [ "Workflow Main" ]
+    types:
+      - completed
   workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+ 
 jobs:
-  # This workflow contains a single job called "build"
-  job2:
+  work:
+    name: Some Workflow Work
     runs-on: ubuntu-latest
-   
     steps:
-    
-      - name: hello
-        run: echo calll
+      - run: echo "Some work"
+
