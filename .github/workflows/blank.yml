@@ -46,7 +46,7 @@ jobs:
   job2:
     runs-on: ubuntu-latest
     env:
-          image: ${{need.dockerize.outputs.image}}
+          image: ${{needs.dockerize.outputs.image}}
     steps:
     
       - name: echo image
