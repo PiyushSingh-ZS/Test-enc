@@ -17,6 +17,17 @@ jobs:
    
     name: Some Workflow Work
     runs-on: ubuntu-latest
+    
     steps:
+      - name: Download math result for job 1
+        uses: actions/download-artifact@v3
+        with:
+          name: homework
+      - name: Print the final result
+        shell: bash
+        run: |
+          value=`cat math-homework.txt`
+          echo The result is $value
+      
       - run: echo "Some work got triggered form ci"
 
