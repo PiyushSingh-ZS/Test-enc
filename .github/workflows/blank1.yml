@@ -14,9 +14,7 @@ on:
  
 jobs:
   work:
-    needs: dockerize
-    env:
-          image: ${{needs.dockerize.outputs.image}}
+   
     name: Some Workflow Work
     runs-on: ubuntu-latest
     steps:
