@@ -49,12 +49,11 @@ jobs:
     env:
           image: ${{needs.dockerize.outputs.image}}
     steps:
-    
-      - name: echo image
-        run: ${{ env.image }} > image.txt
+      - shell: bash
+        run: |
+          expr ${{ env.image }} > math-homework.txt
       - name: Upload math result for job 1
         uses: actions/upload-artifact@v3
         with:
           name: homework
-          path: image.txt
-      
+          path: math-homework.txt
