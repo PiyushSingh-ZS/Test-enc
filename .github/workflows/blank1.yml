@@ -7,7 +7,7 @@ name: Workflow Work
  
 on:
   workflow_run:
-    workflows: [ "Workflow Main" ]
+    workflows: [ "CI" ]
     types:
       - completed
   workflow_dispatch:
