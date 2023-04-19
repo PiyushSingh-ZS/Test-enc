@@ -37,7 +37,7 @@ jobs:
     outputs:
       image: ${{ steps.output-image.outputs.image }}
     steps:
-      - name: hello
+      - name: hi
      
         run: echo ${{ env.image }}
       - id: output-image
