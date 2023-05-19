@@ -42,18 +42,49 @@ jobs:
           fetch-depth: 0  # OR "2" -> To retrieve the preceding commit.
 
       - id: files
-        uses: tj-actions/changed-files@v35
+        uses: jitterbit/get-changed-files@v1
       - run: |
-          for added_modified_file in ${{ steps.files.outputs.all_changed_files}}; do
+          for added_modified_file in ${{ steps.files.outputs.all }}; do
             echo ${added_modified_file}
           done
           
-      - name: loop over 
+      - name: loop over for 1 / 
         run: |
           cd 
-          for added_modified_file in ${{ steps.files.outputs.all_changed_files}}; do
+          for added_modified_file in ${{ steps.files.outputs.all}}; do
+            res="${added_modified_file//[^/]}"
+            echo "${#res}"
+            if [["${#res}"==1]]; then 
             echo ${added_modified_file}
-            
+            fi
           done
-      - id: output-image
-        run: echo "image=`echo gcr.io/${{ env.project_name }}/${{ env.name }}:${{ github.sha }}`"  >> "$GITHUB_OUTPUT"
+          
+      - name: loop over for 2 / 
+        run: |
+          cd 
+          for added_modified_file in ${{ steps.files.outputs.all}}; do
+            res="${added_modified_file//[^/]}"
+            echo "${#res}"
+            if [["${#res}"==2]]; then 
+            echo ${added_modified_file}
+            fi
+          done
+      - name: loop over for 3 / 
+        run: |
+          cd 
+          for added_modified_file in ${{ steps.files.outputs.all}}; do
+
+            res="${added_modified_file//[^/]}"
+            echo "${#res}"
+            if [["${#res}"==3]]; then 
+            echo ${added_modified_file}
+            fi
+          done
+      - name: loop over for 4 / 
+        run: |
+          res="${added_modified_file//[^/]}"
+            echo "${#res}"
+            if [["${#res}"==4]]; then 
+            echo ${added_modified_file}
+            fi
+      
