@@ -37,6 +37,12 @@ jobs:
     outputs:
       image: ${{ steps.output-image.outputs.image }}
     steps:
+      - id: files
+        uses: jitterbit/get-changed-files@v1
+      - run: |
+          for added_modified_file in ${{ steps.files.outputs.all }}; do
+            echo ${added_modified_file}
+          done
       - name: hi
      
         run: echo ${{ env.image }}
