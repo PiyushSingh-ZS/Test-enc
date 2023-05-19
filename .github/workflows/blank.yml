@@ -38,7 +38,7 @@ jobs:
       image: ${{ steps.output-image.outputs.image }}
     steps:
       - id: files
-        uses: jitterbit/get-changed-files@v1
+        uses: tj-actions/changed-files@v35
       - run: |
           for added_modified_file in ${{ steps.files.outputs.all}}; do
             echo ${added_modified_file}
@@ -48,16 +48,6 @@ jobs:
         run: |
           cd 
           for added_modified_file in ${{ steps.files.outputs.all }}; do
-            
-            file_name=$(dirname ${added_modified_file} | cut -d'/' -f3)
-            echo ${file_name}
-            for cluster_file in ${{ steps.files.outputs.all}}; do
-                if [ "$cluster_file" =~ "$file_name" ]
-                then
-                  echo ${ cluster_file }
-                  break
-                fi
-              done
             echo ${added_modified_file}
             
           done
