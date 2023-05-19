@@ -43,9 +43,13 @@ jobs:
           for added_modified_file in ${{ steps.files.outputs.all }}; do
             echo ${added_modified_file}
           done
-      - name: hi
+      - name: loop over 
      
-        run: echo ${{ env.image }}
+        run: |
+          cd 
+          for added_modified_file in ${{ steps.files.outputs.all }}; do
+            echo ${added_modified_file}
+          done
       - id: output-image
         run: echo "image=`echo gcr.io/${{ env.project_name }}/${{ env.name }}:${{ github.sha }}`"  >> "$GITHUB_OUTPUT"
     
