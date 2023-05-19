@@ -56,7 +56,7 @@ jobs:
           printf '%s\n' "${sorted[@]}"
           echo "files=`echo ${sorted}`" >> "$GITHUB_OUTPUT"
       - id : reverse
-        run: printf "%s\n" "${steps.sort.outputs.files[@]}" | sort -t/ -k2
+        run: printf "%s\n" "${steps.sort.outputs.files}" | sort -t/ -k2
       - name: loop over 
         run: |
           cd 
