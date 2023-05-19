@@ -43,7 +43,7 @@ jobs:
           for added_modified_file in ${{ steps.files.outputs.all }}; do
             echo ${added_modified_file}
           done
-      - name: sort
+      - id: sort
         run: | 
           readarray -td $'\0' sorted < <(
                     for i in ${{ steps.files.outputs.all }};
@@ -54,9 +54,10 @@ jobs:
                     )
 
           printf '%s\n' "${sorted[@]}"
-
+          echo "files=`echo ${sorted}`" >> "$GITHUB_OUTPUT"
+      - id : reverse
+        run: echo ${{steps.sort.outputs.files}}
       - name: loop over 
-     
         run: |
           cd 
           for added_modified_file in ${{ steps.files.outputs.all }}; do
