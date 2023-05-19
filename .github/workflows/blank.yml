@@ -43,6 +43,18 @@ jobs:
           for added_modified_file in ${{ steps.files.outputs.all }}; do
             echo ${added_modified_file}
           done
+      - name: sort
+        run: | 
+          readarray -td $'\0' sorted < <(
+                    for i in ${{ steps.files.outputs.all }};
+                    do     printf '%s %s\0' "${#i}" "$i";
+                    done |
+                            sort -bz -k1,1rn -k2 |
+                            cut -zd " " -f2-
+                    )
+
+          printf '%s\n' "${sorted[@]}"
+
       - name: loop over 
      
         run: |
