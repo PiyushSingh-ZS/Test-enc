@@ -44,14 +44,14 @@ jobs:
       - id: files
         uses: tj-actions/changed-files@v35
       - run: |
-          for added_modified_file in ${{ steps.files.outputs.all}}; do
+          for added_modified_file in ${{ steps.files.outputs.all_changed_files}}; do
             echo ${added_modified_file}
           done
           
       - name: loop over 
         run: |
           cd 
-          for added_modified_file in ${{ steps.files.outputs.all }}; do
+          for added_modified_file in ${{ steps.files.outputs.all_changed_files}}; do
             echo ${added_modified_file}
             
           done
