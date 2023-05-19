@@ -48,13 +48,6 @@ jobs:
         run: |
           cd 
           for added_modified_file in ${{ steps.sort.outputs.files }}; do
-            for cluster_file in ${{ steps.sort.outputs.files }}; do
-                if [ "$cluster_file" == "null" ]
-                then
-                  echo ${ cluster_file }
-                  break
-                fi
-              done
             file_name=$(dirname ${added_modified_file} | cut -d'/' -f2)
             echo ${file_name}
             echo ${added_modified_file}
