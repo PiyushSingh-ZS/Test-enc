@@ -43,32 +43,22 @@ jobs:
           for added_modified_file in ${{ steps.files.outputs.all }}; do
             echo ${added_modified_file}
           done
-      - id: sort
-        run: | 
-          oldIFS="$IFS"; IFS=$'\n'
-          if [[ -o noglob ]]; then
-            setglob=1; set -o noglob
-          else
-            setglob=0
-          fi
-
-          sorted=( $(printf '%s\n' "${{ steps.files.outputs.all }}" |
-                      awk '{ print $NF, $0 }' FS='/' OFS='/' |
-                      sort | cut -d'/' -f2- ) )
-
-          IFS="$oldIFS"; unset oldIFS
-          (( setglob == 1 )) && set +o noglob
-          unset setglob
-
-          printf '%s\n' "${sorted[@]}"
-          echo "files=`echo ${sorted}`" >> "$GITHUB_OUTPUT"
-      - id : reverse
-        run: echo ${{steps.sort.outputs.files}}
+          
       - name: loop over 
         run: |
           cd 
           for added_modified_file in ${{ steps.sort.outputs.files }}; do
+            for cluster_file in ${{ steps.sort.outputs.files }}; do
+                if [ "$cluster_file" == "null" ]
+                then
+                  echo ${ cluster_file }
+                  break
+                fi
+              done
+            file_name=$(dirname ${added_modified_file} | cut -d'/' -f2)
+            echo ${file_name}
             echo ${added_modified_file}
+            
           done
       - id: output-image
         run: echo "image=`echo gcr.io/${{ env.project_name }}/${{ env.name }}:${{ github.sha }}`"  >> "$GITHUB_OUTPUT"
