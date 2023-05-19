@@ -52,9 +52,7 @@ jobs:
             file_name=$(dirname ${added_modified_file} | cut -d'/' -f3)
             echo ${file_name}
             for cluster_file in ${{ steps.files.outputs.all}}; do
-                file_name=$(dirname ${added_modified_file} | cut -d'/' -f3)
-                echo ${file_name}
-                if [ "$cluster_file" == *"${{file_name}}/terragrunt.txt" ]
+                if [ "$cluster_file" =~ "$file_name" ]
                 then
                   echo ${ cluster_file }
                   break
