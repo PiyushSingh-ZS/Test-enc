@@ -49,7 +49,7 @@ jobs:
           cd 
           for added_modified_file in ${{ steps.files.outputs.all }}; do
             
-            file_name=$(dirname ${added_modified_file})
+            file_name=$(dirname ${added_modified_file} | cut -d'/' -f1)
             echo ${file_name}
             for cluster_file in ${{ steps.files.outputs.all}}; do
                 if [ "$cluster_file" == *"${file_name}/terragrunt.txt" ]
