@@ -46,17 +46,13 @@ jobs:
       - id: sort
         run: | 
           readarray -td $'\0' sorted < <(
-                    for i in ${{ steps.files.outputs.all }};
-                    do     printf '%s %s\0' "${#i}" "$i";
-                    done |
-                            sort -bz -k1,1rn -k2 |
-                            cut -zd " " -f2-
+                    printf "%s\n" "${{ steps.files.outputs.all[@] }}" | sort -t/ -k2
                     )
 
           printf '%s\n' "${sorted[@]}"
           echo "files=`echo ${sorted}`" >> "$GITHUB_OUTPUT"
       - id : reverse
-        run: printf "%s\n" "${steps.sort.outputs.files}" | sort -t/ -k2
+        run: echo ${{steps.sort.outputs.files}}
       - name: loop over 
         run: |
           cd 
