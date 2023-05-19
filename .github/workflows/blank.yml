@@ -48,43 +48,23 @@ jobs:
             echo ${added_modified_file}
           done
           
-      - name: loop over for 1 / 
-        run: |
-          cd 
-          for added_modified_file in ${{ steps.files.outputs.all}}; do
-            res="${added_modified_file//[^/]}"
-            echo "${#res}"
-            if [["${#res}"==1]]; then 
-            echo ${added_modified_file}
-            fi
-          done
-          
-      - name: loop over for 2 / 
-        run: |
-          cd 
-          for added_modified_file in ${{ steps.files.outputs.all}}; do
-            res="${added_modified_file//[^/]}"
-            echo "${#res}"
-            if [["${#res}"==2]]; then 
-            echo ${added_modified_file}
-            fi
-          done
-      - name: loop over for 3 / 
-        run: |
-          cd 
-          for added_modified_file in ${{ steps.files.outputs.all}}; do
+      - id: sort
+        run: | 
+          readarray -td $'\0' sorted < <(
+                    for i in "${in[@]}"
+                    do     printf '%s %s\0' "${#i}" "$i";
+                    done |
+                            sort -bz -k1,1rn -k2 |
+                            cut -zd " " -f2-
+                    )
 
-            res="${added_modified_file//[^/]}"
-            echo "${#res}"
-            if [["${#res}"==3]]; then 
-            echo ${added_modified_file}
-            fi
-          done
-      - name: loop over for 4 / 
-        run: |
-          res="${added_modified_file//[^/]}"
-            echo "${#res}"
-            if [["${#res}"==4]]; then 
-            echo ${added_modified_file}
-            fi
+          echo "sorted_files=`${{ sorted }}`" >> "$GITHUB_OUTPUT"
+      - id: reverse
+        run: echo ${{ steps.sort.outputs.sorted_files}}
       
+      - name: loop over
+        run: |
+          cd 
+          for added_modified_file in ${{ steps.files.outputs.all}}; do
+            echo ${added_modified_file}
+          done
