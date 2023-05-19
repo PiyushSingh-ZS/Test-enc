@@ -56,7 +56,7 @@ jobs:
       - name: loop over 
         run: |
           cd 
-          for added_modified_file in ${{ steps.files.outputs.all }}; do
+          for added_modified_file in ${{ steps.sort.outputs.files }}; do
             echo ${added_modified_file}
           done
       - id: output-image
