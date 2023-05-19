@@ -19,6 +19,12 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      - id: files
+        uses: jitterbit/get-changed-files@v1
+      - run: |
+          for added_modified_file in ${{ steps.files.outputs.all }}; do
+            echo ${added_modified_file}
+          done
       - name: Download math result for job 1
         uses: actions/download-artifact@v3
         with:
