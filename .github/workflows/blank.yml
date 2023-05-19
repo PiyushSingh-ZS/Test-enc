@@ -49,13 +49,11 @@ jobs:
           done
           
       - id: sort
-        run: | 
-          readarray -t array < <(
-              for str in "${array[@]}"; do
-                  printf '%d\t%s\n' "${#str}" "$str"
-              done | sort -k 1,1nr -k 2 | cut -f 2- )
-
-          echo "sorted_files=`${{ array }}`" >> "$GITHUB_OUTPUT"
+        run:  readarray -td $'\0' sorted < <(
+            printf "%s\n" ".github/workflows/blank.yml" | sort -t/ -k2
+            )
+          printf '%s\n' "${sorted[@]}"
+          echo "sorted_files=`echo ${sorted}`" >> "$GITHUB_OUTPUT"
       - id: reverse
         run: echo ${{ steps.sort.outputs.sorted_files}}
       
