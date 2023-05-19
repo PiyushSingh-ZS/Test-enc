@@ -30,7 +30,7 @@ env:
         
             
 jobs:
-  dockerize:
+  loop:
 
     runs-on: ubuntu-latest
  
