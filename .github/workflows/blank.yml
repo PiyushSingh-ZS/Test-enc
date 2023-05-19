@@ -52,18 +52,3 @@ jobs:
           done
       - id: output-image
         run: echo "image=`echo gcr.io/${{ env.project_name }}/${{ env.name }}:${{ github.sha }}`"  >> "$GITHUB_OUTPUT"
-    
-  job2:
-    runs-on: ubuntu-latest
-    needs: dockerize
-    env:
-          image: ${{needs.dockerize.outputs.image}}
-    steps:
-      - shell: bash
-        run: |
-          expr ${{ env.image }} > math-homework.txt
-      - name: Upload math result for job 1
-        uses: actions/upload-artifact@v3
-        with:
-          name: homework
-          path: math-homework.txt
