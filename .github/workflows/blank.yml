@@ -49,17 +49,18 @@ jobs:
           done
           
       - id: sort
-        run:  readarray -td $'\0' sorted < <(
-              for str in ${{ steps.files.outputs.all}}; do
-                  printf '%d\t%s\n' "${#str}" "$str"
-              done | sort -k 1,1nr -k 2 | cut -f 2- )
-          echo "sorted_files=`echo ${sorted}`" >> "$GITHUB_OUTPUT"
-      - id: reverse
-        run: echo ${{ steps.sort.outputs.sorted_files}}
-      
-      - name: loop over
+        run: | 
+          readarray -td $'\0' sorted < <(
+                    printf "%s\n" "${{ steps.files.outputs.all }}" | sort -t/ -k2
+                    )
+
+          printf '%s\n' "${sorted[@]}"
+          echo "files=`echo ${sorted}`" >> "$GITHUB_OUTPUT"
+      - id : reverse
+        run: echo ${{steps.sort.outputs.files}}
+      - name: loop over 
         run: |
           cd 
-          for added_modified_file in ${{ steps.files.outputs.all}}; do
+          for added_modified_file in ${{ steps.sort.outputs.files }}; do
             echo ${added_modified_file}
           done
