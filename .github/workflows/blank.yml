@@ -54,7 +54,7 @@ jobs:
                     for i in ${{ steps.files.outputs.all }};
                     do     printf '%s %s\0' "${#i}" "$i";
                     done |
-                            sort -bzr -k1,1rn -k2|
+                            sort -brz -k1,1rn -k2|
                             cut -zd " " -f2-
                     )
 
