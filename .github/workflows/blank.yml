@@ -51,13 +51,12 @@ jobs:
       - id: sort
         run: | 
           readarray -td $'\0' sorted < <(
-                    printf "%s\n" "${{ steps.files.outputs.all }}" | sort -t/ -k2
+                    printf "%s\n" "${{ steps.files.outputs.all }}" | sort -t/ -k2 -r
                     )
 
           printf '%s\n' "${sorted[@]}"
           echo "files=`echo ${sorted}`" >> "$GITHUB_OUTPUT"
-      - id : reverse
-        run: echo ${{steps.sort.outputs.files}}
+
       - name: loop over 
         run: |
           cd 
