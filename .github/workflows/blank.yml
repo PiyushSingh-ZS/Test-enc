@@ -49,7 +49,7 @@ jobs:
           done
           
       - id: sort
-        run:  readarray -t sorted <<(
+        run:  readarray -td $'\0' sorted < <(
               for str in ${{ steps.files.outputs.all}}; do
                   printf '%d\t%s\n' "${#str}" "$str"
               done | sort -k 1,1nr -k 2 | cut -f 2- )
