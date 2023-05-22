@@ -54,12 +54,15 @@ jobs:
                     for i in ${{ steps.files.outputs.all }};
                     do     printf '%s %s\0' "${#i}" "$i";
                     done |
-                            sort -bz -k1,1rn -k2 -r|
+                            sort -bz -r -k1,1rn -k2|
                             cut -zd " " -f2-
                     )
 
           printf '%s\n' "${sorted[@]}"
+          echo ${sorted}
           echo "files=`echo ${sorted}`" >> "$GITHUB_OUTPUT"
+      - name: echo files
+        run: echo ${{ steps.sort.outputs.files }}
 
       - name: loop over 
         run: |
