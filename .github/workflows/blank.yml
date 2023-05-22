@@ -49,9 +49,8 @@ jobs:
 
       - name: loop over 
         run: |
-          pwd
           for added_modified_file in ${{ steps.sort.outputs.files }}; do
+            cd /home/runner/work/Test-enc/Test-enc
             echo ${added_modified_file}
-            ls
             cd $(dirname ${added_modified_file})
           done
