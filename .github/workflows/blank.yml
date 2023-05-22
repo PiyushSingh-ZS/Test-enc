@@ -49,7 +49,6 @@ jobs:
 
       - name: loop over 
         run: |
-          ls
           for added_modified_file in ${{ steps.sort.outputs.files }}; do
             echo ${added_modified_file}
             ls
