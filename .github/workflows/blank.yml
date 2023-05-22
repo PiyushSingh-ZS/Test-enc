@@ -52,4 +52,7 @@ jobs:
           ls
           for added_modified_file in ${{ steps.sort.outputs.files }}; do
             echo ${added_modified_file}
+            ls
+            cd $(dirname ${added_modified_file})
+            pwd
           done
