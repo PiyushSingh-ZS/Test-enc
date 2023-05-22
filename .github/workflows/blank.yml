@@ -51,7 +51,11 @@ jobs:
       - id: sort
         run: | 
           readarray -td $'\0' sorted < <(
-                    printf "%s\n" "${{ steps.files.outputs.all }}" | sort -t/ -k2 -r
+                    for i in ${{ steps.files.outputs.all }};
+                    do     printf '%s %s\0' "${#i}" "$i";
+                    done |
+                            sort -bz -k1,1rn -k2 |
+                            cut -zd " " -f2-
                     )
 
           printf '%s\n' "${sorted[@]}"
