@@ -49,8 +49,7 @@ jobs:
 
       - name: loop over 
         run: |
-          pwd
+          ls
           for added_modified_file in ${{ steps.sort.outputs.files }}; do
             echo ${added_modified_file}
-            pwd
           done
