@@ -54,5 +54,4 @@ jobs:
             echo ${added_modified_file}
             ls
             cd $(dirname ${added_modified_file})
-            pwd
           done
