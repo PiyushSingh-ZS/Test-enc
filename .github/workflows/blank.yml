@@ -59,8 +59,7 @@ jobs:
                     )
 
           printf '%s\n' "${sorted[@]}"
-          echo ${sorted}
-          echo "files=`echo ${sorted}`" >> "$GITHUB_OUTPUT"
+          echo "files=`echo ${sorted[@]}`" >> "$GITHUB_OUTPUT"
       - name: echo files
         run: echo ${{ steps.sort.outputs.files }}
 
