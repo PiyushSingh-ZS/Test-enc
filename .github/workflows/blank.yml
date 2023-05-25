@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
 
 env:
-  deploy: "${{secrets.ENV_DEPLOY_KEY}}"
+  envir: ENV
 jobs:
   
   loop:
@@ -59,4 +59,7 @@ jobs:
             ls
           done
       - name: echo variable variable
+        env: 
+            deploy: "${{secrets.${{env.envir}}_DEPLOY_KEY}}"
+
         run : echo ${{ env.deploy }}
