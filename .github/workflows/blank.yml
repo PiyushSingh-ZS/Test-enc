@@ -12,8 +12,11 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-            
+
+env:
+  deploy: "${{secrets.ENV_DEPLOY_KEY}}"
 jobs:
+  
   loop:
 
     runs-on: ubuntu-latest
@@ -55,3 +58,5 @@ jobs:
             cd $(dirname ${added_modified_file})
             ls
           done
+      - name: echo variable variable
+        run : echo ${{ env.deploy }}
