@@ -54,6 +54,7 @@ jobs:
           while IFS= read -r folder_var; do
             eval "$folder_var"
             secret_name=$(echo "$folder_name" | sed 's/_/-/g')
+            echo $secret_name
             echo "SECRET_NAME=$secret_name" >> $GITHUB_ENV
             # Access the GitHub secret value using the environment variable and echo it
             secret_value="${{ secrets[env.SECRET_NAME] }}"
