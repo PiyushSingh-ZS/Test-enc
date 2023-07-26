@@ -48,9 +48,9 @@ jobs:
           for pr in "${PROFILE[@]}"
           touch shared-services.json
           touch $pr.json
-          
-          echo '${{ secrets[pr] }}' > shared-services.json
-          echo '${{ secrets[pr] }}' > $pr.json
+          ls
+          echo '${{ secrets.ZS_1_KEY }}' > shared-services.json
+          echo '${{ secrets.ZS_1_KEY }}' > $pr.json
           done
      
 
