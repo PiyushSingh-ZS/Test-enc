@@ -48,7 +48,7 @@ jobs:
           FOLDER_MATRIX=$(echo "$FOLDER_NAMES_UNDERSCORED" | awk '{print "folder_name=" $1}')
           echo "$FOLDER_MATRIX" >> $GITHUB_ENV
 
-       - name: Echo Secrets for Folders
+      - name: Echo Secrets for Folders
         run: |
           # Read the folder names from the matrix and create environment variables for secrets
           while IFS= read -r folder_var; do
