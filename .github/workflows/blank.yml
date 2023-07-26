@@ -50,12 +50,12 @@ jobs:
 
       - name: Echo Secrets for Folders
         run: |
-          # Read the folder names from the matrix and create environment variables for secrets
+          # Read the folder names from the matrix and echo the respective secrets
           while IFS= read -r folder_var; do
             eval "$folder_var"
             secret_name=$(echo "$folder_name" | sed 's/_/-/g')
 
-            # Access the GitHub secret value and set it as an environment variable
-            secret_value="${{ secrets[secret_name] }}"
-            echo "echo ::set-env name=$folder_name::$secret_value"
+            # Access the GitHub secret value and echo it
+            secret_value=$(echo "${{ secrets[$secret_name] }}")
+            echo "Secret for $folder_name (Secret name: $secret_name): $secret_value"
           done <<< "$folder_matrix"
