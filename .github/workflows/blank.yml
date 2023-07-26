@@ -52,10 +52,12 @@ jobs:
 
       - name: Echo Secrets
         run: |
-          # Read the folder names from the matrix and echo the corresponding secrets
+          # Read the folder names from the matrix and echo the corresponding GitHub secrets
           while IFS= read -r folder_var; do
             eval "$folder_var"
-            secret_name="${folder_name}_KEY"
-            secret_value="${{ secrets[secret_name] }}"
-            echo "Secret for $folder_name: $secret_value"
+            mapping_file="folder_to_secret_mapping.json"
+            secret_name=$(echo "$folder_name" | sed 's/_/-/g')
+            github_secret_name=$(jq -r ".$folder_name" "$mapping_file")
+            secret_value="${{ secrets[$github_secret_name] }}"
+            echo "Secret for $folder_name (GitHub secret name: $github_secret_name): $secret_value"
           done <<< "$folder_matrix"
