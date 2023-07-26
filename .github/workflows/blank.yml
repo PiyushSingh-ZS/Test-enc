@@ -31,19 +31,24 @@ jobs:
       - name: Get GCP Folders
         id: list_folders
         run: |
-          # Use GitHub API and GitHub CLI to get the GCP folder names
-          FOLDER_NAMES=$(gh api -X GET "/repos/${GITHUB_REPOSITORY}/contents/gcp" | jq -r '.[] | select(.type == "dir") | .name')
+          # List folder names in the "gcp" directory and store them in an array
+          IFS=$'\n' read -d '' -r -a FOLDER_NAMES <<< "$(ls gcp/)"
 
           # Process folder names to replace hyphens with underscores and add suffix _KEY
           FOLDER_NAMES_UNDERSCORED=()
-          for folder in $FOLDER_NAMES; do
+          for folder in "${FOLDER_NAMES[@]}"; do
             folder_name=$(echo "$folder" | sed 's|-|_|g')
             FOLDER_NAMES_UNDERSCORED+=("${folder_name}_KEY")
           done
 
           # Export the array as an environment variable
-          echo $FOLDER_NAMES_UNDERSCORED
           export FOLDER_NAMES_UNDERSCORED
+      - name: Echo FOLDER_NAMES_UNDERSCORED
+        run: |
+          for folder_name in "${FOLDER_NAMES_UNDERSCORED[@]}"; do
+            echo "$folder_name"
+          done
+
       - name: Echo Secrets for Folders
         run: |
           # Read the folder names from the matrix and set secret_name as an environment variable
