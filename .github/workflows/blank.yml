@@ -35,31 +35,22 @@ jobs:
             echo ${added_modified_file}
           done
           
-      - id: sort
-        run: | 
-          readarray -td $'\0' sorted < <(
-                    for i in ${{ steps.files.outputs.all }};
-                    do     printf '%s %s\0' "${#i}" "$i";
-                    done |
-                            sort -bz -k1,1n -k2|
-                            cut -zd " " -f2-
-                    )
-
-          printf '%s\n' "${sorted[@]}"
-          echo "files=`echo ${sorted[@]}`" >> "$GITHUB_OUTPUT"
-      - name: echo files
-        run: echo ${{ steps.sort.outputs.files }}
-
-      - name: loop over 
+      - name: Setup Credentials
         run: |
-          for added_modified_file in ${{ steps.sort.outputs.files }}; do
-            cd /home/runner/work/Test-enc/Test-enc
-            echo ${added_modified_file}
-            cd $(dirname ${added_modified_file})
-            ls
+          pwd
+          PROFILE = (
+          "zs-1",
+          "zs-2")
+          cd gcp
+          mkdir credentials
+          cd credentials
+          for pr in "${PROFILE[@]}"
+          touch shared-services.json
+          touch $role.json
+          
+          echo '${{ secrets.$role_KEY }}' > shared-services.json
+          echo '${{ secrets.$role_KEY }}' > $role.json
           done
-      - name: echo variable variable
-        env: 
-            deploy: "${{secrets.${{env.envir}}_DEPLOY_KEY}}"
+     
 
-        run : echo ${{ env.deploy }}
+      
