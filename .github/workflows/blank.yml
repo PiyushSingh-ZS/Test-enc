@@ -28,30 +28,12 @@ jobs:
         with:
           fetch-depth: 0  # OR "2" -> To retrieve the preceding commit
           
-      - name: Get GCP Folders
-        id: list_folders
-        run: |
-          # List folder names in the "gcp" directory and store them in an array
-          IFS=$'\n' read -d '' -r -a FOLDER_NAMES <<< "$(ls gcp/)"
-
-          # Process folder names to replace hyphens with underscores and add suffix _KEY
-          FOLDER_NAMES_UNDERSCORED=()
-          for folder in "${FOLDER_NAMES[@]}"; do
-            folder_name=$(echo "$folder" | sed 's|-|_|g')
-            FOLDER_NAMES_UNDERSCORED+=("${folder_name}_KEY")
-          done
-
-          # Export the array as an environment variable
-          export FOLDER_NAMES_UNDERSCORED
-      - name: Echo FOLDER_NAMES_UNDERSCORED
-        run: |
-          for folder_name in "${FOLDER_NAMES_UNDERSCORED[@]}"; do
-            echo "$folder_name"
-          done
+ 
 
       - name: Echo Secrets for Folders
         run: |
           # Read the folder names from the matrix and set secret_name as an environment variable
+          FOLDER_NAMES_UNDERSCORED = ("zs_1_KEY")
           for folder_name in "${FOLDER_NAMES_UNDERSCORED[@]}"; do
             eval "$folder_var"
             secret_name=$(echo "$folder_name" | sed 's/_/-/g')
