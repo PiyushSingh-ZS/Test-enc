@@ -49,8 +49,8 @@ jobs:
           touch shared-services.json
           touch $role.json
           
-          echo '${{ secrets.$role_KEY }}' > shared-services.json
-          echo '${{ secrets.$role_KEY }}' > $role.json
+          echo '${{ secrets.$pr_KEY }}' > shared-services.json
+          echo '${{ secrets.$pr_KEY }}' > $pr.json
           done
      
 
