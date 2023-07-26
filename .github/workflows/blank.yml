@@ -42,6 +42,7 @@ jobs:
           done
 
           # Export the array as an environment variable
+          echo $FOLDER_NAMES_UNDERSCORED
           export FOLDER_NAMES_UNDERSCORED
       - name: Echo Secrets for Folders
         run: |
