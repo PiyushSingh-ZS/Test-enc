@@ -38,6 +38,7 @@ jobs:
       - name: Setup Credentials
         run: |
           pwd
+          
           PROFILE = (
           "zs-1",
           "zs-2")
