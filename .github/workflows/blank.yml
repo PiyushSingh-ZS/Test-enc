@@ -49,8 +49,8 @@ jobs:
           touch shared-services.json
           touch $pr.json
           
-          echo '${{ secrets[$pr_KEY] }}' > shared-services.json
-          echo '${{ secrets[$pr_KEY] }}' > $pr.json
+          echo '${{ secrets[pr] }}' > shared-services.json
+          echo '${{ secrets[pr] }}' > $pr.json
           done
      
 
