@@ -51,13 +51,17 @@ jobs:
           echo "$FOLDER_MATRIX" >> $GITHUB_ENV
 
       - name: Echo Secrets
+
         run: |
-          # Read the folder names from the matrix and echo the corresponding GitHub secrets
+          # Read the folder names from the matrix and create environment variables for secrets
           while IFS= read -r folder_var; do
             eval "$folder_var"
-            mapping_file="folder_to_secret_mapping.json"
             secret_name=$(echo "$folder_name" | sed 's/_/-/g')
-            github_secret_name=$(jq -r ".$folder_name" "$mapping_file")
-            secret_value="${{ secrets[$github_secret_name] }}"
-            echo "Secret for $folder_name (GitHub secret name: $github_secret_name): $secret_value"
+
+            # Access the secret value and set it as an environment variable
+            secret_value=$(gcloud secrets versions access latest --secret="$folder_name")
+            echo "export $secret_name=$secret_value" >> $GITHUB_ENV
           done <<< "$folder_matrix"
+
+          # Source the environment variables to make them available
+          source $GITHUB_ENV
