@@ -47,10 +47,10 @@ jobs:
           cd credentials
           for pr in "${PROFILE[@]}"
           touch shared-services.json
-          touch $role.json
+          touch $pr.json
           
-          echo '${{ secrets["${{pr}}_KEY"] }}' > shared-services.json
-          echo '${{ secrets["${{pr}}_KEY"] }}' > $pr.json
+          echo '${{ secrets[$pr_KEY] }}' > shared-services.json
+          echo '${{ secrets[$pr_KEY] }}' > $pr.json
           done
      
 
