@@ -38,16 +38,14 @@ jobs:
       - name: List GCP Folders
         id: list_folders
         run: |
-          # List folders in your GCP directory and store them in a variable
-          FOLDER_NAMES=$(gsutil ls gs://your-gcp-bucket/path/to/directory/)
+          # List folder names in the "gcp" directory and store them in a variable
+          FOLDER_NAMES=$(ls gcp/)
 
-          # Replace hyphens with underscores and suffix _KEY to each folder name
-          FOLDER_NAMES_UNDERSCORED=$(echo "$FOLDER_NAMES" | sed 's|-|_|g' | sed 's|gs://your-gcp-bucket/||' | sed 's|/|_KEY\n|g')
+          # Process folder names to replace hyphens with underscores and add suffix _KEY
+          FOLDER_NAMES_UNDERSCORED=$(echo "$FOLDER_NAMES" | sed 's|-|_|g' | sed 's|.*|&_KEY|')
 
-          # Convert the folders to a matrix format
+          # Convert the folders to a matrix format and export it as an environment variable
           FOLDER_MATRIX=$(echo "$FOLDER_NAMES_UNDERSCORED" | awk '{print "folder_name=" $1}')
-
-          # Export the matrix as an environment variable
           echo "$FOLDER_MATRIX" >> $GITHUB_ENV
 
       - name: Echo Secrets
