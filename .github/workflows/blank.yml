@@ -47,7 +47,7 @@ jobs:
                       printf '%s\0' "$file_name";
                       done 
                       )
-            echo "::set-output name=project::$file_array[@]"
+            echo "project=`echo ${file_array[@]}`" >> "$GITHUB_OUTPUT"
 
         - id: set-matrix
           run: echo "::set-output name=matrix::$MATRIX"
