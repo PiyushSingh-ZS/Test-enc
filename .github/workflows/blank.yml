@@ -42,9 +42,9 @@ jobs:
           run: |
             echo "::set-output name=project::$file_array"
             readarray -td $'\0' file_array < <(
-                      for added_modified_file in ${{ steps.sort.outputs.files  }};
+                      for added_modified_file in ${{ steps.sort.outputs.files  }}; do 
                       file_name=$(dirname ${added_modified_file} | cut -d'/' -f2)
-                      do     printf '%s\0' "$file_name";
+                      printf '%s\0' "$file_name";
                       done 
                       )
             echo "::set-output name=project::$file_array[@]"
