@@ -60,17 +60,11 @@ jobs:
       
     strategy:
       matrix: ${{fromJSON(needs.list-account.outputs.matrix)}} 
-
     env :
       CHANGED_PROJECT: ${{needs.list-account.outputs.project}}
 
     steps:
-      - name: Check files
-        run: |
-          export FILE_EXISTS=$(for fil in "${{env.CHANGED_PROJECT}}"; do [ -f "$fil" ] && echo true && exit; done; echo false)
-          echo "FILE_EXISTS=$FILE_EXISTS" >> $GITHUB_ENV
-      - name: check env
-        run: echo ""
+    
       - name: Setup Env
         if: ${{ env.FILE_EXIST }}
         run: |
@@ -80,7 +74,24 @@ jobs:
           TRANSFORMED_SECRET="$TRANSFORMED_SECRET.json"
           echo "FILE_NAME=$TRANSFORMED_SECRET" >> $GITHUB_ENV
           echo "SECRET_NAME=${{ matrix.secret }}" >> $GITHUB_ENV
+      
+      - name: Set FILE_EXISTS variable
+        run: |
           
+          search_file="file2.txt"  # Replace this with the file you want to search for
+
+          FILE_EXISTS="false"
+          for file in "${{ env.CHANGED_PROJECT }}"; do
+            if [ "$file" == "${{ env.PROJECT }}" ]; then
+              FILE_EXISTS="true"
+              break
+            fi
+          done
+
+          echo "FILE_EXISTS=$FILE_EXISTS" >> $GITHUB_ENV
+      - name: check_env
+        run: echo ""
+      - name: Setup Env    
       - id: file
         if: ${{ env.FILE_EXIST }}
         run: |
