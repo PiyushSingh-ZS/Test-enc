@@ -27,9 +27,9 @@ jobs:
     needs: job1
     runs-on: ubuntu-latest
     outputs:
-      file : ${{ steps.output-env.outputs.file }}
-      secret: ${{ steps.output-env.outputs.secret }}
-      project: ${{ steps.output-env.outputs.project }}
+      file : ${{ steps.output-file.outputs.file }}
+      secret: ${{ steps.output-secret.outputs.secret }}
+      project: ${{ steps.output-project.outputs.project }}
       
     strategy:
       matrix: ${{fromJSON(needs.job1.outputs.matrix)}} 
@@ -46,12 +46,18 @@ jobs:
           echo "FILE_NAME=$TRANSFORMED_SECRET" >> $GITHUB_ENV
           echo "SECRET_NAME=${{ matrix.secret }}" >> $GITHUB_ENV
           
-      - id: output-env
+      - id: output-secret
         if: ${{ env.PROJECT == env.CHANGED_PROJECT }}
         run: 
           echo "::set-output name=secret::$SECRET_NAME"
-          echo "::set-output name=file::$FILE_NAME"
+      - id: output-project
+        if: ${{ env.PROJECT == env.CHANGED_PROJECT }}
+        run: 
           echo "::set-output name=project::$PROJECT"
+      - id: output-file
+        if: ${{ env.PROJECT == env.CHANGED_PROJECT }}
+        run: 
+          echo "::set-output name=file::$FILE_NAME"
   jobs3:
       needs: job2
       runs-on: ubuntu-latest
