@@ -42,7 +42,9 @@ jobs:
           run: |
             cd 
             for added_modified_file in ${{ steps.sort.outputs.files  }}; do
+              if [[ $(basename ${added_modified_file}) == 'terragrunt.hcl' ]]; then
               file_name=$(dirname ${added_modified_file} | cut -d'/' -f2)
+            fi
             done
             echo "::set-output name=project::$file_name"
         - id: set-matrix
