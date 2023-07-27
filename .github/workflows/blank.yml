@@ -27,9 +27,9 @@ jobs:
     needs: job1
     runs-on: ubuntu-latest
     outputs:
-      file : ${{ steps.output-image.outputs.file }}
-      secret: ${{ steps.output-image.outputs.secret }}
-      project: ${{ steps.output-image.outputs.project }}
+      file : ${{ steps.output-env.outputs.file }}
+      secret: ${{ steps.output-env.outputs.secret }}
+      project: ${{ steps.output-env.outputs.project }}
       
     strategy:
       matrix: ${{fromJSON(needs.job1.outputs.matrix)}} 
@@ -47,7 +47,7 @@ jobs:
           echo "SECRET_NAME=${{ matrix.secret }}" >> $GITHUB_ENV
           
       - id: output-env
-        if: ${{ env.PROJECT }} == ${{env.CHANGED_PROJECT }}
+        if: ${{ env.PROJECT == env.CHANGED_PROJECT }}
         run: 
           echo "::set-output name=secret::$SECRET_NAME"
           echo "::set-output name=file::$FILE_NAME"
