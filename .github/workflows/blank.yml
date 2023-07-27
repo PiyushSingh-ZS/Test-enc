@@ -23,29 +23,42 @@ jobs:
         - id: set-matrix
           run: echo "::set-output name=matrix::$MATRIX"
   job2:
+    
     needs: job1
     runs-on: ubuntu-latest
+    outputs:
+      file : ${{ steps.output-image.outputs.file }}
+      secret: ${{ steps.output-image.outputs.secret }}
+      project: ${{ steps.output-image.outputs.project }}
+      
     strategy:
       matrix: ${{fromJSON(needs.job1.outputs.matrix)}} 
     
+    env : 
+      CHANGED_PROJECT: "zs-devops"
     steps:
       - name: Setup Env
         run: |
           ORIGINAL_SECRET=${{ matrix.secret }}
           TRANSFORMED_SECRET=$(echo "$ORIGINAL_SECRET" | tr '[:upper:]' '[:lower:]' | sed -e 's/_key$//' -e 's/_/-/g')
+          echo "PROJECT=$TRANSFORMED_SECRET" >> $GITHUB_ENV
           TRANSFORMED_SECRET="$TRANSFORMED_SECRET.json"
           echo "FILE_NAME=$TRANSFORMED_SECRET" >> $GITHUB_ENV
           echo "SECRET_NAME=${{ matrix.secret }}" >> $GITHUB_ENV
-      - name: Run a multi-line script
-        run: |
-          echo '${{ secrets[env.SECRET_NAME] }}' > shared-services.json
-          echo '${{ secrets[env.SECRET_NAME] }}' > "${{ env.FILE_NAME }}"
-          pwd
-          ls
+          
+      - id: output-env
+        if: ${{ env.PROJECT }} == ${{env.CHANGED_PROJECT }}
+        run: 
+          echo "::set-output name=secret::$SECRET_NAME"
+          echo "::set-output name=file::$FILE_NAME"
+          echo "::set-output name=project::$PROJECT"
   jobs3:
       needs: job2
       runs-on: ubuntu-latest
-      
+      env: 
+        PROJECT: ${{ needs.job2.outputs.project }}
+        FILE_NAME: ${{ needs.job2.outputs.file }}
+        SECRET_NAME: ${{ needs.job2.outputs.secret }}
       steps: 
         - name: Check env
           run: echo "env check"
