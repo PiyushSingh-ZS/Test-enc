@@ -19,9 +19,35 @@ jobs:
       runs-on: ubuntu-latest
       outputs:
         matrix: ${{ steps.set-matrix.outputs.matrix }}
+        project: ${{ steps.set-project.outputs.project }]
       steps:
+        - id: files
+          uses: jitterbit/get-changed-files@v1
+                  - run: |
+                  for added_modified_file in ${{ steps.files.outputs.all }}; do
+                  echo ${added_modified_file}
+                  done
+
+        - id: sort
+          run: |
+            readarray -td $'\0' sorted < <(
+                      for i in ${{ steps.files.outputs.all }};
+                      do     printf '%s %s\0' "${#i}" "$i";
+                      done |
+                              sort -bz -k1,1n -k2|
+                              cut -zd " " -f2-
+                      )
+            echo "files=`echo ${sorted[@]}`" >> "$GITHUB_OUTPUT"
+        - id: set-project
+          run: |
+            cd 
+            for added_modified_file in ${{ steps.sort.outputs.files  }}; do
+              file_name=$(dirname ${added_modified_file} | cut -d'/' -f2)
+            done
+            echo "::set-output name=project::$file_name"
         - id: set-matrix
           run: echo "::set-output name=matrix::$MATRIX"
+
   setup-env:
     
     needs: list-account
@@ -33,10 +59,12 @@ jobs:
       
     strategy:
       matrix: ${{fromJSON(needs.list-account.outputs.matrix)}} 
-    
-    env : 
-      CHANGED_PROJECT: "platform-1"
+
+    env :
+      CHANGED_PROJECT: ${{needs.list-account.outputs.project}}
+
     steps:
+
       - name: Setup Env
         run: |
           ORIGINAL_SECRET=${{ matrix.secret }}
