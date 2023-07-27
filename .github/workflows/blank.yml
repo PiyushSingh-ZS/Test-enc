@@ -30,8 +30,9 @@ jobs:
     steps:
       - name: Setup Env
         run: |
-          ORIGINAL_SECRET=$INPUT_MY_VARIABLE_KEY
+          ORIGINAL_SECRET=${{ matrix.secret }}
           TRANSFORMED_SECRET=$(echo "$ORIGINAL_SECRET" | sed -e 's/_KEY$//' -e 's/_/-/g')
+          echo ""
           echo "FILE_NAME=$TRANSFORMED_SECRET" >> $GITHUB_ENV
           echo "SECRET_NAME=${{ matrix.secret }}" >> $GITHUB_ENV
       - name: Run a multi-line script
