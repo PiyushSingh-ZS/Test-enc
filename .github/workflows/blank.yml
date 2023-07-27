@@ -19,7 +19,7 @@ jobs:
       runs-on: ubuntu-latest
       outputs:
         matrix: ${{ steps.set-matrix.outputs.matrix }}
-        project: ${{ steps.set-project.outputs.project }]
+        project: ${{ steps.set-project.outputs.project }}
       steps:
         - id: files
           uses: jitterbit/get-changed-files@v1
