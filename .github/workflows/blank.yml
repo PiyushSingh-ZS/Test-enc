@@ -11,21 +11,16 @@ on:
     branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+env: 
+  MATRIX: | 
+    secret : ["ZS_DEVOPS_KEY","PLATFORM_1_KEY"]  
 jobs:
   
-  job1:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-      - id: set-matrix
-        run: echo "::set-output name=matrix::{\"secret\":[\"ZS_DEVOPS_KEY\", \"PLATFORM_1_KEY\"]}"
+
   job2:
-    needs: job1
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{fromJSON(needs.job1.outputs.matrix)}}
+      matrix: ${{ fromJson(env.MATRIX).secret }}
     
     steps:
       - name: Setup Env
