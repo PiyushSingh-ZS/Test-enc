@@ -15,16 +15,16 @@ env:
   MATRIX: "{\"secret\":[\"ZS_DEVOPS_KEY\",\"PLATFORM_1_KEY\"]}"
 jobs:
   
-  job1:
+  list-account:
       runs-on: ubuntu-latest
       outputs:
         matrix: ${{ steps.set-matrix.outputs.matrix }}
       steps:
         - id: set-matrix
           run: echo "::set-output name=matrix::$MATRIX"
-  job2:
+  setup-env:
     
-    needs: job1
+    needs: list-account
     runs-on: ubuntu-latest
     outputs:
       file : ${{ steps.output-file.outputs.file }}
@@ -32,7 +32,7 @@ jobs:
       project: ${{ steps.output-project.outputs.project }}
       
     strategy:
-      matrix: ${{fromJSON(needs.job1.outputs.matrix)}} 
+      matrix: ${{fromJSON(needs.list-account.outputs.matrix)}} 
     
     env : 
       CHANGED_PROJECT: "platform-1"
@@ -58,13 +58,13 @@ jobs:
         if: ${{ env.PROJECT == env.CHANGED_PROJECT }}
         run: 
           echo "::set-output name=file::$FILE_NAME"
-  jobs3:
-      needs: job2
+  terragrunt:
+      needs: setup-env
       runs-on: ubuntu-latest
       env: 
-        PROJECT: ${{ needs.job2.outputs.project }}
-        FILE_NAME: ${{ needs.job2.outputs.file }}
-        SECRET_NAME: ${{ needs.job2.outputs.secret }}
+        PROJECT: ${{ needs.setup-env.outputs.project }}
+        FILE_NAME: ${{ needs.setup-env.outputs.file }}
+        SECRET_NAME: ${{ needs.setup-env.outputs.secret }}
       steps: 
         - name: Check env
           run: echo "${{env.SECRET_NAME}}"
