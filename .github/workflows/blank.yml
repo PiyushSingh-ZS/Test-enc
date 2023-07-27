@@ -38,16 +38,9 @@ jobs:
           echo "SECRET_NAME=${{ matrix.secret }}" >> $GITHUB_ENV
       - name: Run a multi-line script
         run: |
-          echo "SECRET_NAME=$secret_name" >> $GITHUB_ENV
-          echo "SECRET_NAME = $SECRET_NAME"
-          echo "SECRET_NAME = ${{ env.SECRET_NAME }}"
-          SECRET_VALUE=${{ secrets[env.SECRET_NAME] }}
-          echo "SECRET_VALUE = $SECRET_VALUE"
-          echo "FILE_NAME = ${{ env.FILE_NAME}}"
           echo '${{ secrets[env.SECRET_NAME] }}' > shared-services.json
           echo '${{ secrets[env.SECRET_NAME] }}' > "${{ env.FILE_NAME }}"
           pwd
           ls
-          cat zs-devops.json
           
  
