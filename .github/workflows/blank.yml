@@ -40,7 +40,7 @@ jobs:
             echo "files=`echo ${sorted[@]}`" >> "$GITHUB_OUTPUT"
         - id: set-project
           run: |
-            file_array = ("dummy-project-123zs")
+            file_array = ()
             cd 
             for added_modified_file in ${{ steps.sort.outputs.files  }}; do
               if [[ $(basename ${added_modified_file}) == 'terragrunt.hcl' ]]; then
@@ -49,8 +49,10 @@ jobs:
             fi
             done
             echo "::set-output name=project::$file_array"
+          shell: bash
         - id: set-matrix
           run: echo "::set-output name=matrix::$MATRIX"
+          
 
   setup-env:
     
