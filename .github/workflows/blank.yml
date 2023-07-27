@@ -35,7 +35,7 @@ jobs:
       matrix: ${{fromJSON(needs.job1.outputs.matrix)}} 
     
     env : 
-      CHANGED_PROJECT: "paltform-1"
+      CHANGED_PROJECT: "platform-1"
     steps:
       - name: Setup Env
         run: |
