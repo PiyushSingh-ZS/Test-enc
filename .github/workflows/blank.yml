@@ -91,7 +91,6 @@ jobs:
           echo "FILE_EXISTS=$FILE_EXISTS" >> $GITHUB_ENV
       - name: check_env
         run: echo ""
-      - name: Setup Env    
       - id: file
         if: ${{ env.FILE_EXIST }}
         run: |
