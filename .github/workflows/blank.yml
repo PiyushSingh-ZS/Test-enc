@@ -28,7 +28,7 @@ jobs:
         run: |
           ORIGINAL_SECRET=${{ matrix.secret }}
           TRANSFORMED_SECRET=$(echo "$ORIGINAL_SECRET" | tr '[:upper:]' '[:lower:]' | sed -e 's/_key$//' -e 's/_/-/g')
-          echo ""
+          TRANSFORMED_SECRET="$TRANSFORMED_SECRET.json"
           echo "FILE_NAME=$TRANSFORMED_SECRET" >> $GITHUB_ENV
           echo "SECRET_NAME=${{ matrix.secret }}" >> $GITHUB_ENV
       - name: Run a multi-line script
