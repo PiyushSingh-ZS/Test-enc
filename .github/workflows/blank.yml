@@ -75,26 +75,10 @@ jobs:
           TRANSFORMED_SECRET="$TRANSFORMED_SECRET.json"
           echo "FILE_NAME=$TRANSFORMED_SECRET" >> $GITHUB_ENV
           echo "SECRET_NAME=${{ matrix.secret }}" >> $GITHUB_ENV
-      
-      - name: Set FILE_EXISTS variable
-        run: |
-          
-          search_file="file2.txt"  # Replace this with the file you want to search for
-
-          FILE_EXISTS="false"
-          for file in "${{ env.CHANGED_PROJECT }}"; do
-            echo "$file"
-            if [ "$file" == "${{ env.PROJECT }}" ]; then
-              FILE_EXISTS="true"
-              break
-            fi
-          done
-
-          echo "FILE_EXISTS=$FILE_EXISTS" >> $GITHUB_ENV
       - name: check_env
         run: echo ""
       - id: file
-        if: ${{ env.FILE_EXIST }}
+        if: contains(env.CHANGED_PROJECT,env.PROJECT)
         run: |
           echo '${{ secrets[env.SECRET_NAME] }}' > shared-services.json
           echo '${{ secrets[env.SECRET_NAME] }}' > "${{ env.FILE_NAME }}"
