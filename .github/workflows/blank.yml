@@ -29,15 +29,15 @@ jobs:
           fetch-depth: 0  # OR "2" -> To retrieve the preceding commit
           
  
-      - name: Set Env
-        run: |
-          echo "ZS_DEVOPS_KEY=ZS_DEVOPS_KEY" >> $GITHUB_ENV
+ 
+      - id: output-var
+        run: echo "SECRET_NAME = ZS_DEVOPS_KEY" >> "$GITHUB_OUTPUT"
+        
       - name: Run a multi-line script
         run: |
-          echo "SECRET_NAME = $SECRET_NAME"
-          echo "SECRET_NAME = ${{ env.SECRET_NAME }}"
-          echo "SECRET_NAME = `echo env.${{ env.SECRET_NAME }}`"
-          SECRET_VALUE=${{ secrets[`echo env.${{ env.SECRET_NAME }}`] }}
+          echo "SECRET_NAME_1 = $ steps.output-var.outputs.SECRET_NAME"
+          echo "SECRET_NAME_1 = ${{  steps.output-var.outputs.SECRET_NAME }}"
+          SECRET_VALUE=${{ secrets[ steps.output-var.outputs.SECRET_NAME] }}
           echo "SECRET_VALUE = $SECRET_VALUE"
  
           
