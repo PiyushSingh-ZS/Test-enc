@@ -42,5 +42,12 @@ jobs:
           echo '${{ secrets[env.SECRET_NAME] }}' > "${{ env.FILE_NAME }}"
           pwd
           ls
+  jobs3:
+      needs: job2
+      runs-on: ubuntu-latest
+      
+      steps: 
+        - name: Check env
+          run: echo "env check"
           
  
