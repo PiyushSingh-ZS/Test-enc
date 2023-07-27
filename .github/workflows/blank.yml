@@ -57,10 +57,6 @@ jobs:
     
     needs: list-account
     runs-on: ubuntu-latest
-    outputs:
-      file : ${{ steps.output-file.outputs.file }}
-      secret: ${{ steps.output-secret.outputs.secret }}
-      project: ${{ steps.output-project.outputs.project }}
       
     strategy:
       matrix: ${{fromJSON(needs.list-account.outputs.matrix)}} 
@@ -71,7 +67,7 @@ jobs:
     steps:
       - name: Check files
         run: |
-          export FILE_EXISTS=$(for fil in "${{env.file}}"; do [ -f "$fil" ] && echo true && exit; done; echo false)
+          export FILE_EXISTS=$(for fil in "${{env.CHANGED_PROJECT}}"; do [ -f "$fil" ] && echo true && exit; done; echo false)
           echo "FILE_EXISTS=$FILE_EXISTS" >> $GITHUB_ENV
       - name: check env
         run: echo ""
