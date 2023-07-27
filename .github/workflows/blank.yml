@@ -44,7 +44,7 @@ jobs:
             readarray -td $'\0' file_array < <(
                       for added_modified_file in ${{ steps.sort.outputs.files  }}; do 
                       file_name=$(dirname ${added_modified_file} | cut -d'/' -f2)
-                      do     printf '%s %s\0' "${#file_name}" "$file_name";
+                      printf '%s %s\0' "${#file_name}" "$file_name";
                       done |
                               sort -bz -k1,1n -k2|
                               cut -zd " " -f2-
