@@ -40,16 +40,15 @@ jobs:
             echo "files=`echo ${sorted[@]}`" >> "$GITHUB_OUTPUT"
         - id: set-project
           run: |
-            file_array = ()
-            cd 
-            for added_modified_file in ${{ steps.sort.outputs.files  }}; do
-              if [[ $(basename ${added_modified_file}) == 'terragrunt.hcl' ]]; then
-              file_name=$(dirname ${added_modified_file} | cut -d'/' -f2)
-              file_array += ("$file_name")
-            fi
-            done
             echo "::set-output name=project::$file_array"
-          shell: bash
+            readarray -td $'\0' file_array < <(
+                      for added_modified_file in ${{ steps.sort.outputs.files  }};
+                      file_name=$(dirname ${added_modified_file} | cut -d'/' -f2)
+                      do     printf '%s\0' "$file_name";
+                      done 
+                      )
+            echo "::set-output name=project::$file_array[@]"
+
         - id: set-matrix
           run: echo "::set-output name=matrix::$MATRIX"
           
