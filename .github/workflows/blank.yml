@@ -44,7 +44,7 @@ jobs:
             readarray -t file_array < <(
                       for added_modified_file in ${{ steps.sort.outputs.files  }}; do 
                       file_name=$(dirname ${added_modified_file} | cut -d'/' -f2)
-                      printf "$file_name";
+                      echo  "$file_name";
                       done 
                       )
             echo "project=`echo ${file_array[@]}`" >> "$GITHUB_OUTPUT"
