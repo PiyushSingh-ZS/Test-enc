@@ -20,7 +20,8 @@ jobs:
   job2:
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ env.MATRIX }}
+      matrix: 
+        secret: ["ZS_DEVOPS_KEY","PLATFORM_1_KEY"] 
     
     steps:
       - name: Setup Env
