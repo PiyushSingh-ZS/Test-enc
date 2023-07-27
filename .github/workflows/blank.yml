@@ -12,35 +12,34 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
-env:
-  envir: ENV
 jobs:
   
-  loop:
-
+  job1:
     runs-on: ubuntu-latest
- 
     outputs:
-      image: ${{ steps.output-image.outputs.image }}
+			# This needs to match your step's id and name parameters
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # OR "2" -> To retrieve the preceding commit
-          
- 
- 
-      - id: output-var
-        run: echo "::set-output name=SECRET_NAME::ZS_DEVOPS_KEY"
-        
+			# Important: Do not forget the id!
+      - id: set-matrix
+        run: echo "::set-output name=matrix::{\"secret\":[\"ZS_DEVOPS_KEY\", \"PLATFORM_1_KEY\"]}"
+  job2:
+    needs: job1
+    runs-on: ubuntu-latest
+    strategy:
+			# This needs to match the first job's name and output parameter
+      matrix: ${{fromJSON(needs.job1.outputs.matrix)}}
+    
+    steps:
+      - name: Setup Env
+        run: |
+          echo "SECRET_NAME=${{ matrix.node }}" >> $GITHUB_ENV
       - name: Run a multi-line script
         run: |
-          echo "SECRET_NAME_1 = $steps.output-var.outputs.SECRET_NAME"
-          S_N  = "SECRET_NAME"
-          echo "$S_N"
-          echo "SECRET_NAME_1 = ${{  'steps.output-var.outputs.${S_N}' }}"
-          SECRET_VALUE=${{ secrets[ 'steps.output-var.outputs.${S_N}'] }}
+          echo "SECRET_NAME=$secret_name" >> $GITHUB_ENV
+          echo "SECRET_NAME = $SECRET_NAME"
+          echo "SECRET_NAME = ${{ env.SECRET_NAME }}"
+          SECRET_VALUE=${{ secrets[env.SECRET_NAME] }}
           echo "SECRET_VALUE = $SECRET_VALUE"
- 
           
  
