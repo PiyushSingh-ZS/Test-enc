@@ -27,7 +27,7 @@ jobs:
       - name: Setup Env
         run: |
           ORIGINAL_SECRET=${{ matrix.secret }}
-          TRANSFORMED_SECRET=$(echo "$ORIGINAL_SECRET" | sed -e 's/_KEY$//' -e 's/_/-/g')
+          TRANSFORMED_SECRET=$(echo "$ORIGINAL_SECRET" | tr '[:upper:]' '[:lower:]' | sed -e 's/_key$//' -e 's/_/-/g')
           echo ""
           echo "FILE_NAME=$TRANSFORMED_SECRET" >> $GITHUB_ENV
           echo "SECRET_NAME=${{ matrix.secret }}" >> $GITHUB_ENV
