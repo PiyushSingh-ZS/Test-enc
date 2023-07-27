@@ -30,7 +30,7 @@ jobs:
     steps:
       - name: Setup Env
         run: |
-          echo "SECRET_NAME=${{ matrix.node }}" >> $GITHUB_ENV
+          echo "SECRET_NAME=${{ matrix.secret }}" >> $GITHUB_ENV
       - name: Run a multi-line script
         run: |
           echo "SECRET_NAME=$secret_name" >> $GITHUB_ENV
