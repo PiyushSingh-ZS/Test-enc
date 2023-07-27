@@ -12,7 +12,7 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
 env: 
-  MATRIX: | 
+  MATRIX: |
     secret : ["ZS_DEVOPS_KEY","PLATFORM_1_KEY"]  
 jobs:
   
@@ -20,7 +20,7 @@ jobs:
   job2:
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJson(env.MATRIX).secret }}
+      matrix: ${{ env.MATRIX }}
     
     steps:
       - name: Setup Env
