@@ -37,5 +37,8 @@ jobs:
           echo "SECRET_NAME = ${{ env.SECRET_NAME }}"
           SECRET_VALUE=${{ secrets[env.SECRET_NAME] }}
           echo "SECRET_VALUE = $SECRET_VALUE"
+      - name: Run a multi-line script
+        run: |
+          echo "check env"
           
  
