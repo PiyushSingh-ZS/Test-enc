@@ -30,18 +30,13 @@ jobs:
           
  
 
-      - name: Echo Secrets for Folders
+      - name: Run a multi-line script
+        env:
+          SECRET_NAME: ZS_DEVOPS_KEY
         run: |
-          # Read the folder names from the matrix and set secret_name as an environment variable
-          echo 'FOLDER_NAMES_UNDERSCORED = ("zs_1_KEY")'  >> $GITHUB_ENV
-          for folder_name in "${FOLDER_NAMES_UNDERSCORED[@]}"; do
-            eval "$folder_var"
-            secret_name=$(echo "$folder_name" | sed 's/_/-/g')
-            echo $secret_name
-            echo "SECRET_NAME=$secret_name" >> $GITHUB_ENV
-            # Access the GitHub secret value using the environment variable and echo it
-            secret_value="${{ secrets[env.SECRET_NAME] }}"
-            echo "Secret for $SECRET_NAME (Secret name: $secret_value): $secret_value"
-          done 
+          echo "SECRET_NAME = $SECRET_NAME"
+          echo "SECRET_NAME = ${{ env.SECRET_NAME }}"
+          SECRET_VALUE=${{ secrets[env.SECRET_NAME] }}
+          echo "SECRET_VALUE = $SECRET_VALUE"
           
  
