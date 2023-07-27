@@ -31,8 +31,6 @@ jobs:
  
 
       - name: Run a multi-line script
-        env:
-          SECRET_NAME: ZS_DEVOPS_KEY
         run: |
           echo "SECRET_NAME=ZS_DEVOPS_KEY" >> $GITHUB_ENV
           echo "SECRET_NAME = $SECRET_NAME"
