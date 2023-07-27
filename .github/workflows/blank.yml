@@ -69,8 +69,12 @@ jobs:
       CHANGED_PROJECT: ${{needs.list-account.outputs.project}}
 
     steps:
-
+      - name: Check files
+        run: |
+          export FILE_EXISTS=$(for fil in "${{env.file}}"; do [ -f "$fil" ] && echo true && exit; done; echo false)
+          echo "FILE_EXISTS=$FILE_EXISTS" >> $GITHUB_ENV
       - name: Setup Env
+        if: ${{ env.FILE_EXIST }}
         run: |
           ORIGINAL_SECRET=${{ matrix.secret }}
           TRANSFORMED_SECRET=$(echo "$ORIGINAL_SECRET" | tr '[:upper:]' '[:lower:]' | sed -e 's/_key$//' -e 's/_/-/g')
@@ -79,34 +83,10 @@ jobs:
           echo "FILE_NAME=$TRANSFORMED_SECRET" >> $GITHUB_ENV
           echo "SECRET_NAME=${{ matrix.secret }}" >> $GITHUB_ENV
           
-      - id: output-secret
-        if: ${{ env.PROJECT == env.CHANGED_PROJECT }}
-        run: 
-          echo "::set-output name=secret::$SECRET_NAME"
-      - id: output-project
-        if: ${{ env.PROJECT == env.CHANGED_PROJECT }}
-        run: 
-          echo "::set-output name=project::$PROJECT"
-      - id: output-file
-        if: ${{ env.PROJECT == env.CHANGED_PROJECT }}
-        run: 
-          echo "::set-output name=file::$FILE_NAME"
-  terragrunt:
-      needs: setup-env
-      runs-on: ubuntu-latest
-      env: 
-        PROJECT: ${{ needs.setup-env.outputs.project }}
-        FILE_NAME: ${{ needs.setup-env.outputs.file }}
-        SECRET_NAME: ${{ needs.setup-env.outputs.secret }}
-      steps: 
-        - name: Check env
-          run: echo "${{env.SECRET_NAME}}"
-      
-        - name: Setup Creds
-          run: | 
-            echo '${{ secrets[env.SECRET_NAME] }}' > shared-services.json
-            echo '${{ secrets[env.SECRET_NAME] }}' > "${{ env.FILE_NAME }}"
-            pwd
-            ls
-          
- 
+      - id: file
+        if: ${{ env.FILE_EXIST }}
+        run: |
+          echo '${{ secrets[env.SECRET_NAME] }}' > shared-services.json
+          echo '${{ secrets[env.SECRET_NAME] }}' > "${{ env.FILE_NAME }}"
+          pwd
+          ls
