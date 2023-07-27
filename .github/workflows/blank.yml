@@ -40,7 +40,7 @@ jobs:
             echo "files=`echo ${sorted[@]}`" >> "$GITHUB_OUTPUT"
         - id: set-project
           run: |
-            file_array = ()
+            file_array = ("dummy-project-123zs")
             cd 
             for added_modified_file in ${{ steps.sort.outputs.files  }}; do
               if [[ $(basename ${added_modified_file}) == 'terragrunt.hcl' ]]; then
