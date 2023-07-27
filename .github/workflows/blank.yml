@@ -61,6 +61,6 @@ jobs:
         SECRET_NAME: ${{ needs.job2.outputs.secret }}
       steps: 
         - name: Check env
-          run: echo "env check"
+          run: echo "${{env.SECRET_NAME}}"
           
  
