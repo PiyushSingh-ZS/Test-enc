@@ -102,7 +102,7 @@ jobs:
         - name: Setup Creds
           run: | 
             echo '${{ secrets[env.SECRET_NAME] }}' > shared-services.json
-            echo '${{ secrets[env.SECRET_NAME] }}' > "{{ env.FILE_NAME }}"
+            echo '${{ secrets[env.SECRET_NAME] }}' > "${{ env.FILE_NAME }}"
             pwd
             ls
           
