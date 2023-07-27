@@ -81,6 +81,7 @@ jobs:
 
           FILE_EXISTS="false"
           for file in "${{ env.CHANGED_PROJECT }}"; do
+            echo "$file"
             if [ "$file" == "${{ env.PROJECT }}" ]; then
               FILE_EXISTS="true"
               break
