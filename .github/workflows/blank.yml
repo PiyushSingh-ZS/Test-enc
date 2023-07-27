@@ -73,6 +73,8 @@ jobs:
         run: |
           export FILE_EXISTS=$(for fil in "${{env.file}}"; do [ -f "$fil" ] && echo true && exit; done; echo false)
           echo "FILE_EXISTS=$FILE_EXISTS" >> $GITHUB_ENV
+      - name: check env
+        run: echo ""
       - name: Setup Env
         if: ${{ env.FILE_EXIST }}
         run: |
