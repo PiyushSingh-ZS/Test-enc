@@ -26,7 +26,6 @@ jobs:
     needs: job1
     runs-on: ubuntu-latest
     strategy:
-			# This needs to match the first job's name and output parameter
       matrix: ${{fromJSON(needs.job1.outputs.matrix)}} 
     
     steps:
