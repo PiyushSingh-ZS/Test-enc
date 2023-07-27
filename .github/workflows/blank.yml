@@ -29,16 +29,15 @@ jobs:
           fetch-depth: 0  # OR "2" -> To retrieve the preceding commit
           
  
-
-      - name: Run a multi-line script
+      - name: Set Env
         run: |
           echo "SECRET_NAME=ZS_DEVOPS_KEY" >> $GITHUB_ENV
+      - name: Run a multi-line script
+        run: |
           echo "SECRET_NAME = $SECRET_NAME"
           echo "SECRET_NAME = ${{ env.SECRET_NAME }}"
           SECRET_VALUE=${{ secrets[env.SECRET_NAME] }}
           echo "SECRET_VALUE = $SECRET_VALUE"
-      - name: Run a multi-line script
-        run: |
-          echo "check env"
+ 
           
  
