@@ -92,17 +92,17 @@ jobs:
                 echo ${added_modified_file}
               done
 
-          - id: sort
-            if: contains(env.CHANGED_PROJECT,env.PROJECT)
-            run: |
-              readarray -td $'\0' sorted < <(
-                        for i in ${{ steps.files.outputs.all }};
-                        do     printf '%s %s\0' "${#i}" "$i";
-                        done |
-                                sort -bz -k1,1n -k2|
-                                cut -zd " " -f2-
-                        )
-              echo "files=`echo ${sorted[@]}`" >> "$GITHUB_OUTPUT"
+      - id: sort
+        if: contains(env.CHANGED_PROJECT,env.PROJECT)
+        run: |
+          readarray -td $'\0' sorted < <(
+                    for i in ${{ steps.files.outputs.all }};
+                    do     printf '%s %s\0' "${#i}" "$i";
+                    done |
+                            sort -bz -k1,1n -k2|
+                            cut -zd " " -f2-
+                    )
+          echo "files=`echo ${sorted[@]}`" >> "$GITHUB_OUTPUT"
       - name: check terrsgrunt
         if: contains(env.CHANGED_PROJECT,env.PROJECT)
         run: |
