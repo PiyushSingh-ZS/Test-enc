@@ -110,6 +110,6 @@ jobs:
             if [[ $(basename ${added_modified_file}) == 'terragrunt.hcl' && ${file_name} == "${{ env.PROJECT }}" ]]; then
             pwd 
             echo ${added_modified_file}
-            echo ${ file_name }
+            echo ${file_name}
             fi
           done
