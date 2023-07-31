@@ -90,7 +90,7 @@ jobs:
           cd 
           for added_modified_file in ${{ steps.sort.outputs.files  }}; do
             file_name=$(dirname ${added_modified_file} | cut -d'/' -f2)
-            if [[ $(basename ${added_modified_file}) == 'terragrunt.hcl' && ${file_name} == "${{ env.PROJECT }"}]]; then
+            if [[ $(basename ${added_modified_file}) == 'terragrunt.hcl' && ${file_name} == "${{ env.PROJECT }}"]]; then
             pwd 
             echo ${added_modified_file}
             echo ${ file_name }
