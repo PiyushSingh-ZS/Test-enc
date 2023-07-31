@@ -85,7 +85,6 @@ jobs:
           pwd
           ls
       - id: files
-        if: contains(env.CHANGED_PROJECT,env.PROJECT)
         uses: jitterbit/get-changed-files@v1
           - run: |
               for added_modified_file in ${{ steps.files.outputs.all }}; do
@@ -109,7 +108,7 @@ jobs:
           cd 
           for added_modified_file in ${{ steps.sort.outputs.files  }}; do
             file_name=$(dirname ${added_modified_file} | cut -d'/' -f2)
-            if [[ $(basename ${added_modified_file}) == 'terragrunt.hcl' && ${file_name} == "${{ env.PROJECT }}"]]; then
+            if [[ $(basename ${added_modified_file}) == 'terragrunt.hcl' && ${file_name} == "${{ env.PROJECT }}" ]]; then
             pwd 
             echo ${added_modified_file}
             echo ${ file_name }
