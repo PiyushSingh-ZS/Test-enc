@@ -84,6 +84,25 @@ jobs:
           echo '${{ secrets[env.SECRET_NAME] }}' > "${{ env.FILE_NAME }}"
           pwd
           ls
+      - id: files
+        if: contains(env.CHANGED_PROJECT,env.PROJECT)
+        uses: jitterbit/get-changed-files@v1
+          - run: |
+              for added_modified_file in ${{ steps.files.outputs.all }}; do
+                echo ${added_modified_file}
+              done
+
+          - id: sort
+            if: contains(env.CHANGED_PROJECT,env.PROJECT)
+            run: |
+              readarray -td $'\0' sorted < <(
+                        for i in ${{ steps.files.outputs.all }};
+                        do     printf '%s %s\0' "${#i}" "$i";
+                        done |
+                                sort -bz -k1,1n -k2|
+                                cut -zd " " -f2-
+                        )
+              echo "files=`echo ${sorted[@]}`" >> "$GITHUB_OUTPUT"
       - name: check terrsgrunt
         if: contains(env.CHANGED_PROJECT,env.PROJECT)
         run: |
