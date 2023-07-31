@@ -77,10 +77,22 @@ jobs:
           echo "SECRET_NAME=${{ matrix.secret }}" >> $GITHUB_ENV
       - name: check_env
         run: echo ""
-      - id: file
+      - name: export credentials file
         if: contains(env.CHANGED_PROJECT,env.PROJECT)
         run: |
           echo '${{ secrets[env.SECRET_NAME] }}' > shared-services.json
           echo '${{ secrets[env.SECRET_NAME] }}' > "${{ env.FILE_NAME }}"
           pwd
           ls
+      - name: check terrsgrunt
+        if: contains(env.CHANGED_PROJECT,env.PROJECT)
+        run: |
+          cd 
+          for added_modified_file in ${{ steps.sort.outputs.files  }}; do
+            file_name=$(dirname ${added_modified_file} | cut -d'/' -f2)
+            if [[ $(basename ${added_modified_file}) == 'terragrunt.hcl' && ${file_name} == "${{ env.PROJECT }"}]]; then
+            pwd 
+            echo ${added_modified_file}
+            echo ${ file_name }
+            fi
+          done
