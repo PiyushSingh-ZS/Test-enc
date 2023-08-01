@@ -31,7 +31,6 @@ jobs:
           echo "ENV_APP_NAME=STAGE_APP_NAME" >> $GITHUB_ENV
           echo "ENV_GAR_PROJECT=STAGE_GAR_PROJECT" >> $GITHUB_ENV
       - name: export credentials file
-        if: contains(env.CHANGED_PROJECT,env.PROJECT)
         run: |
           echo "APP_NAME"
           echo '${{ vars[env.ENV_APP_NAME] }}' 
