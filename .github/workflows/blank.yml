@@ -4,112 +4,36 @@ name: CI
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
+  # Triggers the workflow on push or pull request events but only for the "development" branch
   push:
-    branches: [ "main" ]
+    branches: [ "development","staging" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "development","staging" ]
 
   # Allows you to run this workflow manually from the Actions tab
-env: 
-  MATRIX: "{\"secret\":[\"ZS_DEVOPS_KEY\",\"PLATFORM_1_KEY\"]}"
+
 jobs:
-  
-  list-account:
-      runs-on: ubuntu-latest
-      outputs:
-        matrix: ${{ steps.set-matrix.outputs.matrix }}
-        project: ${{ steps.set-project.outputs.project }}
-      steps:
-        - id: files
-          uses: jitterbit/get-changed-files@v1
-        - run: |
-            for added_modified_file in ${{ steps.files.outputs.all }}; do
-            echo ${added_modified_file}
-            done
-
-        - id: sort
-          run: |
-            readarray -td $'\0' sorted < <(
-                      for i in ${{ steps.files.outputs.all }};
-                      do     printf '%s %s\0' "${#i}" "$i";
-                      done |
-                              sort -bz -k1,1n -k2|
-                              cut -zd " " -f2-
-                      )
-            echo "files=`echo ${sorted[@]}`" >> "$GITHUB_OUTPUT"
-        - id: set-project
-          run: |
-            echo "::set-output name=project::$file_array"
-            readarray -td $'\0' file_array < <(
-                      for added_modified_file in ${{ steps.sort.outputs.files  }}; do 
-                      file_name=$(dirname ${added_modified_file} | cut -d'/' -f2)
-                      printf '%s %s\0' "${#file_name}" "$file_name";
-                      done |
-                              sort -bz -k1,1n -k2|
-                              cut -zd " " -f2-
-                      )
-            echo "project=`echo ${file_array[@]}`" >> "$GITHUB_OUTPUT"
-
-        - id: set-matrix
-          run: echo "::set-output name=matrix::$MATRIX"
-          
 
   setup-env:
-    
-    needs: list-account
     runs-on: ubuntu-latest
-      
-    strategy:
-      matrix: ${{fromJSON(needs.list-account.outputs.matrix)}} 
-    env :
-      CHANGED_PROJECT: ${{needs.list-account.outputs.project}}
-
     steps:
     
       - name: Setup Env
+        if: contains(github.ref, "development")
         run: |
-          ORIGINAL_SECRET=${{ matrix.secret }}
-          TRANSFORMED_SECRET=$(echo "$ORIGINAL_SECRET" | tr '[:upper:]' '[:lower:]' | sed -e 's/_key$//' -e 's/_/-/g')
-          echo "PROJECT=$TRANSFORMED_SECRET" >> $GITHUB_ENV
-          TRANSFORMED_SECRET="$TRANSFORMED_SECRET.json"
-          echo "FILE_NAME=$TRANSFORMED_SECRET" >> $GITHUB_ENV
-          echo "SECRET_NAME=${{ matrix.secret }}" >> $GITHUB_ENV
+        
+          echo "ENV_APP_NAME=DEV_APP_NAME" >> $GITHUB_ENV
+          echo "ENV_GAR_PROJECT=DEV_GAR_PROJECT" >> $GITHUB_ENV
+      - name: Setup Env
+        if: contains(github.ref, "staging")
+        run: |
+
+          echo "ENV_APP_NAME=STAGE_APP_NAME" >> $GITHUB_ENV
+          echo "ENV_GAR_PROJECT=STAGE_GAR_PROJECT" >> $GITHUB_ENV
       - name: export credentials file
         if: contains(env.CHANGED_PROJECT,env.PROJECT)
         run: |
-          echo '${{ secrets[env.SECRET_NAME] }}' > shared-services.json
-          echo '${{ secrets[env.SECRET_NAME] }}' > "${{ env.FILE_NAME }}"
-          pwd
-          ls
-      - id: files
-        if: contains(env.CHANGED_PROJECT,env.PROJECT)
-        uses: jitterbit/get-changed-files@v1
-      - run: |
-          for added_modified_file in ${{ steps.files.outputs.all }}; do
-            echo ${added_modified_file}
-          done
-
-      - id: sort
-        if: contains(env.CHANGED_PROJECT,env.PROJECT)
-        run: |
-          readarray -td $'\0' sorted < <(
-                    for i in ${{ steps.files.outputs.all }};
-                    do     printf '%s %s\0' "${#i}" "$i";
-                    done |
-                            sort -bz -k1,1n -k2|
-                            cut -zd " " -f2-
-                    )
-          echo "files=`echo ${sorted[@]}`" >> "$GITHUB_OUTPUT"
-      - name: check terrsgrunt
-        if: contains(env.CHANGED_PROJECT,env.PROJECT)
-        run: |
-          cd 
-          for added_modified_file in ${{ steps.sort.outputs.files  }}; do
-            file_name=$(dirname ${added_modified_file} | cut -d'/' -f2)
-            if [[ $(basename ${added_modified_file}) == 'terragrunt.hcl' && ${file_name} == "${{ env.PROJECT }}" ]]; then
-            pwd 
-            echo ${added_modified_file}
-            echo ${file_name}
-            fi
-          done
+          echo "APP_NAME"
+          echo '${{ vars[env.ENV_APP_NAME] }}' 
+          echo "GAR PROJECT"
+          echo '${{ vars[env.ENV_GAR_PROJECT }}'
