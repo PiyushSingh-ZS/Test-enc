@@ -35,4 +35,4 @@ jobs:
           echo "APP_NAME"
           echo '${{ vars[env.ENV_APP_NAME] }}' 
           echo "GAR PROJECT"
-          echo '${{ vars[env.ENV_GAR_PROJECT }}'
+          echo '${{ vars[env.ENV_GAR_PROJECT] }}'
