@@ -28,9 +28,9 @@ jobs:
       - name: echo 2
         run: echo ${{ github.event.commits[0] }}
       - name: echo 3
-        run: echo ${[ github.event.commits[0].added }}
+        run: echo ${{ contains(github.event.changed_files, 'gcp/') }}
   build-and-push-deployment-image:
-    if: ${{contains(github.event.commits[0].added, 'gcp') || contains(github.event.commits[0].modified, 'gcp')}}
+    if: ${{ contains(github.event.changed_files, 'gcp/') }}
     runs-on: ubuntu-latest
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
@@ -44,7 +44,7 @@ jobs:
 
 
   build-and-push-go-image:
-    if: contains(github.event.commits[0].added,'aws') || contains(github.event.commits[0].modified, 'aws')
+    if: ${{ contains(github.event.changed_files, 'aws/') }}
     runs-on: ubuntu-latest
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
