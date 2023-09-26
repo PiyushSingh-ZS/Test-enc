@@ -2,7 +2,7 @@ name: Build and Push Base Images
 
 on:
   push:
-    branch: "development"
+    tags: ["*"]
 
 
 env:
@@ -20,11 +20,25 @@ jobs:
 
     steps:
       - id: files
-        uses: jitterbit/get-changed-files@v1
       - run: |
           for added_modified_file in ${{ steps.files.outputs.all }}; do
             echo ${added_modified_file}
           done
+      - name: Get Changed Files for Tag
+        run: |
+          # Extract the tag name from the GitHub ref
+          TAG_NAME=$(echo "${{ github.ref }}" | sed 's/refs\/tags\///')
+          
+          # Check out the specific tag
+          git checkout "tags/${TAG_NAME}"
+          
+          # Get the list of changed files
+          CHANGED_FILES=$(git diff --name-only HEAD^)
+          
+          # Print the list of changed files
+          echo "Changed files for tag ${TAG_NAME}:"
+          echo "$CHANGED_FILES"
+
       - id: version
         run: |
           echo "version=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
