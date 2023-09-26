@@ -35,7 +35,7 @@ jobs:
 
 
   build-and-push-go-image:
-    if: contains(github.event.commits[0].added, "aws/") || contains(github.event.commits[0].modified, "aws/")
+    if: contains(github.event.commits[0].added,'aws/') || contains(github.event.commits[0].modified, 'aws/')
     runs-on: ubuntu-latest
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
