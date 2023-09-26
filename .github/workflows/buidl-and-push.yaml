@@ -19,15 +19,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - id: files
-        uses: jitterbit/get-changed-files@v1
-      - run: |
-          for added_modified_file in ${{ steps.files.outputs.all }}; do
-            echo ${added_modified_file}
-          done
+        run: |
+          echo git diff --name-only ${{ github.sha }} github.event.before
       - id: version
         run: |
           echo "version=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
