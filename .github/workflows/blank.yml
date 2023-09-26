@@ -28,7 +28,7 @@ jobs:
       - name: echo 2
         run: echo ${{ github.event.commits[0] }}
       - name: echo 3
-        run: echo ${{ contains(github.event.changed_files, 'gcp/') }}
+        run: echo ${{ github.event.changed_files }}
   build-and-push-deployment-image:
     if: ${{ contains(github.event.changed_files, 'gcp/') }}
     runs-on: ubuntu-latest
