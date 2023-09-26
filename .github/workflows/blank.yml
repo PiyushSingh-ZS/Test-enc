@@ -19,7 +19,16 @@ env:
 # There is a single job in this workflow. It's configured to run on the latest available version of Ubuntu.
 jobs:
 
+  test-files:
+    runs-on: ubuntu-latest
 
+    steps:
+      - name: echo
+        run: echo contains(github.event.commits[0].added, 'gcp') || contains(github.event.commits[0].modified, 'gcp')
+      - name: echo 2
+        run: echo github.event.commits[0]
+      - name: echo 3
+        run: echo github.event.commits[0].added
   build-and-push-deployment-image:
     if: contains(github.event.commits[0].added, 'gcp') || contains(github.event.commits[0].modified, 'gcp')
     runs-on: ubuntu-latest
