@@ -2,7 +2,7 @@ name: Build and Push Go Base Images
 
 on:
   push:
-    tags: ["deployments*"]
+    tags: ["go*"]
 
 
 env:
