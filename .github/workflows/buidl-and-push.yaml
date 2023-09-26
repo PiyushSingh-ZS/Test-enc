@@ -3,6 +3,7 @@ name: Build and Push Base Images
 on:
   push:
     tags: ["*"]
+    branch: "development"
 
 
 env:
