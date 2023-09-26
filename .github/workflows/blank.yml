@@ -52,7 +52,7 @@ jobs:
         with:
           context: deployments/.
           push: true
-          tags: ghcr.io/piyushsingh-zs/${{ env.IMAGE_NAME }}:deployments-${{ github.sha }}
+          tags: ghcr.io/${{ env.IMAGE_NAME }}:deployments-${{ github.sha }}
           labels: ${{ steps.meta.outputs.labels }}
 
   build-and-push-go-image:
