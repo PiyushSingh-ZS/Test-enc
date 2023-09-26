@@ -21,7 +21,7 @@ jobs:
     steps:
       - id: files
         run: |
-          echo git diff --name-only ${{ github.sha }} github.event.before
+          echo "::set-output name=files::$(git diff --name-only ${{ github.sha }} ${{ github.event.before }})"
       - id: version
         run: |
           echo "version=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
