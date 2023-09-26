@@ -26,7 +26,7 @@ jobs:
             echo ${added_modified_file}
           done
       - id: version
-      - run: |
+        run: |
           echo "version=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
 
   build-and-push-deployment-image:
