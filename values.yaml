@@ -1,0 +1,6 @@
+name: samp-func
+secret_key_reference: ""
+
+#minMemory: '<minMemory>' # default value "128Mi"
+#maxMemory: '<maxMemory>' # default value "512Mi"
+#maxCPU: '<maxCPU >' # default value "500m"
