@@ -2,7 +2,7 @@ name: Build and Push Base Images
 
 on:
   push:
-    tags: ["*"]
+    tags: ["deployments*"]
 
 
 env:
@@ -19,16 +19,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - id: files
-        run: |
-          echo "::set-output name=files::$(git diff --name-only ${{ github.sha }} ${{ github.event.before }})"
       - id: version
         run: |
           echo "version=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
 
   build-and-push-deployment-image:
     needs: changed-files
-    if: ${{ contains(needs.changed-files.outputs.files, 'deployments/') }}
 
     runs-on: ubuntu-latest
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
@@ -55,7 +51,7 @@ jobs:
         with:
           context: deployments/.
           push: true
-          tags: ghcr.io/${{ env.IMAGE_NAME }}:deployments-${{ needs.changed-files.outputs.version}}
+          tags: ghcr.io/${{ env.IMAGE_NAME }}:${{ needs.changed-files.outputs.version}}
           labels: ${{ steps.meta.outputs.labels }}
 
   build-and-push-go-image:
