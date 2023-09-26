@@ -20,11 +20,6 @@ jobs:
 
     steps:
       - id: files
-      - run: |
-          for added_modified_file in ${{ steps.files.outputs.all }}; do
-            echo ${added_modified_file}
-          done
-      - name: Get Changed Files for Tag
         run: |
           # Extract the tag name from the GitHub ref
           TAG_NAME=$(echo "${{ github.ref }}" | sed 's/refs\/tags\///')
