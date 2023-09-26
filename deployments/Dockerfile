@@ -21,7 +21,6 @@ RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyri
 RUN apt-get update -y
 RUN apt-get install google-cloud-cli -y
 
-# Update kubectl
 RUN apt-get install kubectl
 
 RUN apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
