@@ -21,7 +21,7 @@ jobs:
 
 
   build-and-push-deployment-image:
-    if: contains(github.event.commits[0].added, 'gcp/') || contains(github.event.commits[0].modified, 'gcp/')
+    if: contains(github.event.commits[0].added, 'gcp') || contains(github.event.commits[0].modified, 'gcp')
     runs-on: ubuntu-latest
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
@@ -35,7 +35,7 @@ jobs:
 
 
   build-and-push-go-image:
-    if: contains(github.event.commits[0].added,'aws/') || contains(github.event.commits[0].modified, 'aws/')
+    if: contains(github.event.commits[0].added,'aws') || contains(github.event.commits[0].modified, 'aws')
     runs-on: ubuntu-latest
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
