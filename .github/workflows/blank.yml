@@ -24,13 +24,13 @@ jobs:
 
     steps:
       - name: echo
-        run: echo contains(github.event.commits[0].added, 'gcp') || contains(github.event.commits[0].modified, 'gcp')
+        run: echo '${{contains(github.event.commits[0].added, 'gcp') || contains(github.event.commits[0].modified, 'gcp')}}'
       - name: echo 2
-        run: echo github.event.commits[0]
+        run: echo ${{ github.event.commits[0] }}
       - name: echo 3
-        run: echo github.event.commits[0].added
+        run: echo ${[ github.event.commits[0].added }}
   build-and-push-deployment-image:
-    if: contains(github.event.commits[0].added, 'gcp') || contains(github.event.commits[0].modified, 'gcp')
+    if: ${{contains(github.event.commits[0].added, 'gcp') || contains(github.event.commits[0].modified, 'gcp')}}
     runs-on: ubuntu-latest
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
