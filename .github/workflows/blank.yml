@@ -17,6 +17,10 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/piyushsingh-zs/test-enc:go-b5c466121b96ff7e2bff80338d06bdd14473c50c
+      options: --rm
+      env:
+        GOBIN: /go/bin
+        PATH: /go/bin:$PATH
     steps:
       - name: Check out Code
         uses: actions/checkout@v3
@@ -70,6 +74,11 @@ jobs:
     name: 🎖 Code Quality
     container:
       image: ghcr.io/piyushsingh-zs/test-enc:go-b5c466121b96ff7e2bff80338d06bdd14473c50c
+      options: --rm
+      env:
+        GOBIN: /go/bin
+        PATH: /go/bin:$PATH
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
