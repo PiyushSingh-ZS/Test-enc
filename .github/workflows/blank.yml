@@ -16,7 +16,7 @@ jobs:
 
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/piyushsingh-zs/test-enc:go-b5c466121b96ff7e2bff80338d06bdd14473c50c
+      image:  ghcr.io/piyushsingh-zs/test-enc:go-d55ed625a477ce7119433d130fdc6e3036c249d8
       options: --rm
       env:
         GOBIN: /go/bin
@@ -73,7 +73,7 @@ jobs:
   code_quality:
     name: 🎖 Code Quality
     container:
-      image: ghcr.io/piyushsingh-zs/test-enc:go-b5c466121b96ff7e2bff80338d06bdd14473c50c
+      image:  ghcr.io/piyushsingh-zs/test-enc:go-d55ed625a477ce7119433d130fdc6e3036c249d8
       options: --rm
       env:
         GOBIN: /go/bin
