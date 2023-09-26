@@ -19,18 +19,21 @@ env:
 # There is a single job in this workflow. It's configured to run on the latest available version of Ubuntu.
 jobs:
 
-  test-files:
+  changed-files:
+    outputs:
+      files: ${{ steps.files.outputs.all }}
     runs-on: ubuntu-latest
 
     steps:
-      - name: echo
-        run: echo '${{contains(github.event.commits[0].added, 'gcp') || contains(github.event.commits[0].modified, 'gcp')}}'
-      - name: echo 2
-        run: echo ${{ github.event.commits[0] }}
-      - name: echo 3
-        run: echo ${{ github.event.changed_files }}
+      - id: files
+        uses: jitterbit/get-changed-files@v1
+          - run: |
+              for added_modified_file in ${{ steps.files.outputs.all }}; do
+                echo ${added_modified_file}
+              done
   build-and-push-deployment-image:
-    if: ${{ contains(github.event.changed_files, 'gcp/') }}
+    needs: changed-files
+    if: ${{ contains(needs.changed-files.outputs.files, 'gcp/') }}
     runs-on: ubuntu-latest
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
@@ -44,7 +47,8 @@ jobs:
 
 
   build-and-push-go-image:
-    if: ${{ contains(github.event.changed_files, 'aws/') }}
+    needs: changed-files
+    if: ${{ contains(needs.changed-files.outputs.files, 'aws/') }}
     runs-on: ubuntu-latest
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
