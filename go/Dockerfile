@@ -1,29 +1,16 @@
-FROM ubuntu:latest
+FROM golang:1.20
+ARG PAT
 
-# installing curl
-RUN apt-get update && \
-    apt-get install -y curl && \
-    apt-get -y install nano
+WORKDIR /usr/src/app
 
+RUN go env -w GOPRIVATE=developer.zopsmart.com/go,github.com/zopsmart
+RUN apt-get -y update
+RUN apt-get -y install git
+RUN git config --global url."https://${PAT}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
 
-# Install helm
-RUN curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-RUN helm version
+RUN git config --global http.sslVerify false
 
-# Install Python
-RUN apt-get install python3 -y
-RUN python3 --version
+COPY go.mod ./
+RUN go get developer.zopsmart.com/go/gofr
 
-# Install the Google Cloud SDK
-RUN apt-get install apt-transport-https ca-certificates gnupg curl sudo -y
-RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg  add -
-RUN apt-get update -y
-RUN apt-get install google-cloud-cli -y
-
-
-RUN apt-get install kubectl
-
-RUN apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
-
-CMD ["/bin/bash"]
+RUN rm go.mod
