@@ -31,7 +31,7 @@ jobs:
       - name: Extract directory
         id: extract_string
         run: |
-          full_string="go-1"
+          full_string="${{ env.RELEASE_VERSION }}"
           IFS='-' read -ra parts <<< "$full_string"
           echo "Extracted string: ${parts[0]}"
           echo "directory=${parts[0]}">> $GITHUB_ENV
