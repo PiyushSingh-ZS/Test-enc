@@ -53,3 +53,5 @@ jobs:
           push: true
           tags: ghcr.io/${{ env.IMAGE_NAME }}:${{ env.RELEASE_VERSION }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: PAT=${{ secrets.PAT }}
+
