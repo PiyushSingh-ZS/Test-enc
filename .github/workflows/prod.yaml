@@ -1,0 +1,51 @@
+name: Deployments
+
+on:
+  push:
+    branches: [ development ]
+
+env:
+  PROJECT_NAME: hello
+  CLUSTER_NAME: products-1
+
+
+jobs:
+  Deployment:
+    if: github.ref == 'refs/heads/development' && github.event_name == 'push'
+
+    name: "Deployment"
+    runs-on: ubuntu-latest
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      # Checkout the repository to the GitHub Actions runner
+      - name: Checkout
+        uses: actions/checkout@v2
+
+
+      # List of files that are added or modified in the commit
+      - id: files
+        uses: masesgroup/retrieve-changed-files@v2
+      - run: |
+          for added_modified_file in ${{ steps.files.outputs.all }}; do
+            echo ${added_modified_file}
+          done
+
+
+
+
+
+      # Deploy the services into Cluster using Helm Commands
+      - name: Deployment
+        run: |
+          for added_modified_file in ${{ steps.files.outputs.all  }}; do
+            echo ${added_modified_file}
+          
+            fi
+          
+          
+          done
