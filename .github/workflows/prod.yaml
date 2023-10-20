@@ -35,7 +35,7 @@ jobs:
       - name: SET CONFIG
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/development'}}
         run: |
-          echo "hello" >> sample1
+          echo "hello world" >> sample1
           git config --global user.email "action@github.com" && git config --global user.name "GitHub-Action"
           git config --global --add safe.directory /__w/$(basename ${{ github.repository }})/$(basename ${{ github.repository }})
           git diff --quiet --exit-code sample1 || git commit sample1 -m "updating coverage in sample1"
@@ -50,6 +50,8 @@ jobs:
         run: |
           if [[ "${{ github.event_name }}" == 'push' && "${{ github.ref }}" == 'refs/heads/development' ]]; then
             sha=$(git rev-parse HEAD)
+          else
+            sha="${{ github.sha }}"
           fi
           echo "$sha"
           echo "sha=$sha" >> "$GITHUB_OUTPUT"
