@@ -35,8 +35,7 @@ jobs:
       - name: SET CONFIG
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/development'}}
         run: |
-          go install github.com/AlexBeauchemin/gobadge@latest
-          gobadge -filename=temp/c.out -target=$(pwd)/README.md
+          touch README.md
           git config --global user.email "action@github.com" && git config --global user.name "GitHub-Action"
           git config --global --add safe.directory /__w/$(basename ${{ github.repository }})/$(basename ${{ github.repository }})
           git diff --quiet --exit-code README.md || git commit README.md -m "updating coverage in README.md"
