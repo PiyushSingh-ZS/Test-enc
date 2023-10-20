@@ -26,7 +26,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-
+      - name: Set up Go 1.19
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.19
+        id: go
       # List of files that are added or modified in the commit
       - name: SET CONFIG
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/development'}}
