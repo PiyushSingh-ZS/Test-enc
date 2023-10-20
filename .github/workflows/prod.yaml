@@ -28,22 +28,25 @@ jobs:
 
 
       # List of files that are added or modified in the commit
-      - id: files
-        uses: jitterbit/get-changed-files@v1
-      - run: |
-          for added_modified_file in ${{ steps.files.outputs.all }}; do
-            echo ${added_modified_file}
-          done
-
-
-
-
-
-      # Deploy the services into Cluster using Helm Commands
-      - name: Deployment
+      - name: SET CONFIG
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/development'}}
         run: |
-          for added_modified_file in ${{ steps.files.outputs.all  }}; do
-            echo ${added_modified_file}
-          
-          
-          done
+          go install github.com/AlexBeauchemin/gobadge@latest
+          gobadge -filename=temp/c.out -target=$(pwd)/README.md
+          git config --global user.email "action@github.com" && git config --global user.name "GitHub-Action"
+          git config --global --add safe.directory /__w/$(basename ${{ github.repository }})/$(basename ${{ github.repository }})
+          git diff --quiet --exit-code README.md || git commit README.md -m "updating coverage in README.md"
+      - name: Push Coverage Badge
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/development'}}
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ github.token }}
+          branch: ${{github.ref}}
+
+      - id: output-sha
+        run: |
+          if [[ "${{ github.event_name }}" == 'push' && "${{ github.ref }}" == 'refs/heads/development' ]]; then
+            sha=$(git rev-parse HEAD)
+          fi
+          echo "$sha"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
