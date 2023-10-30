@@ -26,32 +26,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Set up Go 1.19
-        uses: actions/setup-go@v4
+      - uses: dorny/paths-filter@v2
+        id: changed
         with:
-          go-version: 1.19
-        id: go
-      # List of files that are added or modified in the commit
-      - name: SET CONFIG
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/development'}}
-        run: |
-          echo "hello world" >> sample1
-          git config --global user.email "action@github.com" && git config --global user.name "GitHub-Action"
-          git config --global --add safe.directory /__w/$(basename ${{ github.repository }})/$(basename ${{ github.repository }})
-          git diff --quiet --exit-code sample1 || git commit sample1 -m "updating coverage in sample1"
-      - name: Push Coverage Badge
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/development'}}
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ github.token }}
-          branch: ${{github.ref}}
+          filters: |
+            helm1:
+              - 'deployments/helm1.yaml'
+            helm2:
+              - 'deployments/helm2.yaml'
+            helm3:
+              - 'deployments/helm3.yaml'
+            helm4:
+              - 'deployments/helm4.yaml'
+      - name: helm1
+        if: steps.nginx.outputs.heml1 == 'true'
+        run: cat deployments/helm1.yaml
+      - name: helm2
+        if: steps.nginx.outputs.heml2 == 'true'
+        run: cat deployments/helm2.yaml
+      - name: helm3
+        if: steps.nginx.outputs.heml3 == 'true'
+        run: cat deployments/helm3.yaml
+      - name: helm4
+        if: steps.nginx.outputs.heml4 == 'true'
+        run: cat deployments/helm4.yaml
 
-      - id: output-sha
-        run: |
-          if [[ "${{ github.event_name }}" == 'push' && "${{ github.ref }}" == 'refs/heads/development' ]]; then
-            sha=$(git rev-parse HEAD)
-          else
-            sha="${{ github.sha }}"
-          fi
-          echo "$sha"
-          echo "sha=$sha" >> "$GITHUB_OUTPUT"
