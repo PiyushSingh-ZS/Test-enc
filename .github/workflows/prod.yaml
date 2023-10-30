@@ -2,7 +2,7 @@ name: Test-Helm
 
 on:
   push:
-    branches: [ helm-tet ]
+    branches: [ helm-test ]
 
 env:
   PROJECT_NAME: hello
