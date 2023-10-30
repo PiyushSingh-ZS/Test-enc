@@ -2,7 +2,7 @@ name: Deployments
 
 on:
   push:
-    branches: [ development ]
+    branches: [ helm-tet ]
 
 env:
   PROJECT_NAME: hello
@@ -11,8 +11,6 @@ env:
 
 jobs:
   Deployment:
-    if: github.ref == 'refs/heads/development' && github.event_name == 'push'
-
     name: "Deployment"
     runs-on: ubuntu-latest
 
