@@ -25,6 +25,8 @@ jobs:
               - 'cluster-configs/fluent-bit.yaml'
             cert-manager:
               - 'cluster-configs/cert-manager.yaml'
+            issuer:
+              - 'cluster-configs/issuer.yaml'
 
         # run only if some file in 'src' folder was changed
 
@@ -35,5 +37,8 @@ jobs:
         run: |
           echo true
       - if: steps.changes.outputs.nginx == 'true'
+        run: |
+          echo true
+      - if: steps.changes.outputs.issuer == 'true'
         run: |
           echo true
