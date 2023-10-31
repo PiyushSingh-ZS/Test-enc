@@ -1,4 +1,4 @@
-name: Helm Deploymet
+name: Helm Deployment
 
 on:
   push:
