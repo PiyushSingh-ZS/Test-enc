@@ -1,115 +1,55 @@
-# This is a basic workflow to help you get started with Actions
+name: Helm Deploymet
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
-env: 
-  MATRIX: "{\"secret\":[\"ZS_DEVOPS_KEY\",\"PLATFORM_1_KEY\"]}"
+    branches: [ main ]
+env:
+  project_name: "zopsmart-test"
+  cluster_name: "test-pvc-stage"
+  region: "us-central1"
 jobs:
-  
-  list-account:
-      runs-on: ubuntu-latest
-      outputs:
-        matrix: ${{ steps.set-matrix.outputs.matrix }}
-        project: ${{ steps.set-project.outputs.project }}
-      steps:
-        - id: files
-          uses: jitterbit/get-changed-files@v1
-        - run: |
-            for added_modified_file in ${{ steps.files.outputs.all }}; do
-            echo ${added_modified_file}
-            done
-
-        - id: sort
-          run: |
-            readarray -td $'\0' sorted < <(
-                      for i in ${{ steps.files.outputs.all }};
-                      do     printf '%s %s\0' "${#i}" "$i";
-                      done |
-                              sort -bz -k1,1n -k2|
-                              cut -zd " " -f2-
-                      )
-            echo "files=`echo ${sorted[@]}`" >> "$GITHUB_OUTPUT"
-        - id: set-project
-          run: |
-            echo "::set-output name=project::$file_array"
-            readarray -td $'\0' file_array < <(
-                      for added_modified_file in ${{ steps.sort.outputs.files  }}; do 
-                      file_name=$(dirname ${added_modified_file} | cut -d'/' -f2)
-                      printf '%s %s\0' "${#file_name}" "$file_name";
-                      done |
-                              sort -bz -k1,1n -k2|
-                              cut -zd " " -f2-
-                      )
-            echo "project=`echo ${file_array[@]}`" >> "$GITHUB_OUTPUT"
-
-        - id: set-matrix
-          run: echo "::set-output name=matrix::$MATRIX"
-          
-
-  setup-env:
-    
-    needs: list-account
+  Helm_Charts:
+    name: "Helm Deployment"
     runs-on: ubuntu-latest
-      
-    strategy:
-      matrix: ${{fromJSON(needs.list-account.outputs.matrix)}} 
-    env :
-      CHANGED_PROJECT: ${{needs.list-account.outputs.project}}
-
     steps:
-    
-      - name: Setup Env
-        run: |
-          ORIGINAL_SECRET=${{ matrix.secret }}
-          TRANSFORMED_SECRET=$(echo "$ORIGINAL_SECRET" | tr '[:upper:]' '[:lower:]' | sed -e 's/_key$//' -e 's/_/-/g')
-          echo "PROJECT=$TRANSFORMED_SECRET" >> $GITHUB_ENV
-          TRANSFORMED_SECRET="$TRANSFORMED_SECRET.json"
-          echo "FILE_NAME=$TRANSFORMED_SECRET" >> $GITHUB_ENV
-          echo "SECRET_NAME=${{ matrix.secret }}" >> $GITHUB_ENV
-      - name: export credentials file
-        if: contains(env.CHANGED_PROJECT,env.PROJECT)
-        run: |
-          echo '${{ secrets[env.SECRET_NAME] }}' > shared-services.json
-          echo '${{ secrets[env.SECRET_NAME] }}' > "${{ env.FILE_NAME }}"
-          pwd
-          ls
-      - id: files
-        if: contains(env.CHANGED_PROJECT,env.PROJECT)
-        uses: jitterbit/get-changed-files@v1
-      - run: |
-          for added_modified_file in ${{ steps.files.outputs.all }}; do
-            echo ${added_modified_file}
-          done
+      - name: Check out code
+        uses: actions/checkout@v3
 
-      - id: sort
-        if: contains(env.CHANGED_PROJECT,env.PROJECT)
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          project_id: ${{env.project_name}}
+          service_account_key: ${{ secrets.ZOPSMART_TEST_KEY }}
+          export_default_credentials: true
+
+      - name: Update Kubectl component
+        run: gcloud --quiet components update kubectl
+
+      - name: Set GCloud Project and Fetch Cluster Credentials
+        run: gcloud container clusters get-credentials ${{env.cluster_name}} --zone=${{ env.region }} --project=${{env.project_name}}
+
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            nginx:
+              - 'cluster-configs/nginx.yaml'
+            fluent:
+              - 'cluster-configs/fluent-bit.yaml'
+            cert-manager:
+              - 'cluster-configs/cert-manager.yaml'
+
+        # run only if some file in 'src' folder was changed
+
+      - if: steps.changes.outputs.fluent == 'true'
         run: |
-          readarray -td $'\0' sorted < <(
-                    for i in ${{ steps.files.outputs.all }};
-                    do     printf '%s %s\0' "${#i}" "$i";
-                    done |
-                            sort -bz -k1,1n -k2|
-                            cut -zd " " -f2-
-                    )
-          echo "files=`echo ${sorted[@]}`" >> "$GITHUB_OUTPUT"
-      - name: check terrsgrunt
-        if: contains(env.CHANGED_PROJECT,env.PROJECT)
+          echo true
+      - if: steps.changes.outputs.cert-manager == 'true'
         run: |
-          cd 
-          for added_modified_file in ${{ steps.sort.outputs.files  }}; do
-            file_name=$(dirname ${added_modified_file} | cut -d'/' -f2)
-            if [[ $(basename ${added_modified_file}) == 'terragrunt.hcl' && ${file_name} == "${{ env.PROJECT }}" ]]; then
-            pwd 
-            echo ${added_modified_file}
-            echo ${file_name}
-            fi
-          done
+          echo true
+      - if: steps.changes.outputs.nginx == 'true'
+        run: |
+          echo true
