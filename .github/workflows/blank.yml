@@ -20,25 +20,29 @@ jobs:
         with:
           filters: |
             nginx:
-              - 'cluster-configs/nginx.yaml'
+              - added|modified: 'cluster-configs/nginx.yaml'
             fluent:
-              - 'cluster-configs/fluent-bit.yaml'
+              - added|modified: 'cluster-configs/fluent-bit.yaml'
             cert-manager:
-              - 'cluster-configs/cert-manager.yaml'
+              - added|modified: 'cluster-configs/cert-manager.yaml'
             issuer:
-              - 'cluster-configs/issuer.yaml'
+              - added|modified: 'cluster-configs/issuer.yaml'
 
         # run only if some file in 'src' folder was changed
 
       - if: steps.changes.outputs.fluent == 'true'
+        name: fluent-bit
         run: |
           echo true
       - if: steps.changes.outputs.cert-manager == 'true'
+        name: cert-manager
         run: |
           echo true
       - if: steps.changes.outputs.nginx == 'true'
+        name: nginx
         run: |
           echo true
       - if: steps.changes.outputs.issuer == 'true'
+        name: issuer
         run: |
           echo true
