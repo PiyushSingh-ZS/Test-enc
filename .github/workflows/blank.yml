@@ -15,22 +15,6 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Install Helm
-        uses: azure/setup-helm@v3
-
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0
-        with:
-          project_id: ${{env.project_name}}
-          service_account_key: ${{ secrets.ZOPSMART_TEST_KEY }}
-          export_default_credentials: true
-
-      - name: Update Kubectl component
-        run: gcloud --quiet components update kubectl
-
-      - name: Set GCloud Project and Fetch Cluster Credentials
-        run: gcloud container clusters get-credentials ${{env.cluster_name}} --zone=${{ env.region }} --project=${{env.project_name}}
-
       - uses: dorny/paths-filter@v2
         id: changes
         with:
