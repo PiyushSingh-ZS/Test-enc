@@ -9,4 +9,4 @@ env:
   region: "us-central1"
 jobs:
   Helm_Charts:
-    uses: Piyush-Singh-ZS/Test-enc/.github/workflows/test.yaml@ui-reusable
+    uses: Piyush-Singh-ZS/Test-enc/.github/workflows/test.yaml@main
