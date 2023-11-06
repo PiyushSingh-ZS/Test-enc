@@ -12,8 +12,7 @@ on:
 
 
 env:
-  event_flag: ${{ github.event_name == 'push' }}
-  branch_flag: ${{ github.ref == 'refs/heads/${{ inputs.BRANCH_NAME }}' }}
+  branch_flag: ${{ github.event_name == 'push' && github.ref == 'refs/heads/${{ inputs.BRANCH_NAME }}' }}
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,10 +21,8 @@ jobs:
     steps:
       - name: debug
         run: |
-          echo ${{ env.branch_flag }} && ${{ env.event_flag }}
           echo ${{ env.branch_flag }} 
-          echo ${{ env.event_flag }}
 
       - name: test45
-        if: ${{ env.branch_flag }} && ${{ env.event_flag }}
+        if: ${{ env.branch_flag }}
         run: echo "should run"
