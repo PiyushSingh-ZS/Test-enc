@@ -6,4 +6,4 @@ on:
 jobs:
 
   Helm_Charts:
-    uses: Piyush-Singh-ZS/Test-enc/.github/workflows/test.yaml@main
+    uses: PiyushSingh-ZS/Test-enc/.github/workflows/test.yaml@main
