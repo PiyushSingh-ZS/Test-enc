@@ -13,7 +13,7 @@ on:
 
 env:
   branch_flag: ${{ github.event_name == 'push' && github.ref == 'refs/heads/${{ inputs.BRANCH_NAME }}' }}
-  ref: ${ github.ref }}}
+  ref: ${{ github.ref }}
 jobs:
   build:
     runs-on: ubuntu-latest
