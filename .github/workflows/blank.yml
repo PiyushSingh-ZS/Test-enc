@@ -3,10 +3,7 @@ name: Helm Deployment
 on:
   push:
     branches: [ main ]
-env:
-  project_name: "zopsmart-test"
-  cluster_name: "test-pvc-stage"
-  region: "us-central1"
 jobs:
+
   Helm_Charts:
     uses: Piyush-Singh-ZS/Test-enc/.github/workflows/test.yaml@main
