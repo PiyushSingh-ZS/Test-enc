@@ -7,12 +7,13 @@ on:
         description: 'name of branch main/master'
         required: false
         type: string
-        default: main
+        default: "main"
 
 
 
 env:
   branch_flag: ${{ github.event_name == 'push' && github.ref == 'refs/heads/${{ inputs.BRANCH_NAME }}' }}
+  ref: ${ github.ref }}}
 jobs:
   build:
     runs-on: ubuntu-latest
