@@ -1,0 +1,32 @@
+name: "test and linters"
+on:
+  workflow_call:
+
+    inputs:
+      BRANCH_NAME:
+        description: 'name of branch main/master'
+        required: false
+        type: string
+        default: main
+
+
+
+env:
+  event_flag: ${{ github.event_name == 'push' }}
+  branch_flag: ${{ github.ref == 'refs/heads/${{ inputs.BRANCH_NAME }}' }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: 🧪 Test and 🔨 Build
+
+    steps:
+      - name: debug
+        run: |
+          echo {{ env.branch_flag }} && {{ env.event_flag }}
+          echo {{ env.branch_flag }} 
+          echo {{ env.event_flag }}
+
+      - uses: actions/upload-artifact@v3
+        if: {{ env.branch_flag }} && {{ env.event_flag }}
+        name: upload zipped build and node modules
+        run: echo "should run"

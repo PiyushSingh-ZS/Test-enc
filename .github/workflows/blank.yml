@@ -9,40 +9,4 @@ env:
   region: "us-central1"
 jobs:
   Helm_Charts:
-    name: "Helm Deployment"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: |
-            nginx:
-              - added|modified: 'cluster-configs/nginx.yaml'
-            fluent:
-              - added|modified: 'cluster-configs/fluent-bit.yaml'
-            cert-manager:
-              - added|modified: 'cluster-configs/cert-manager.yaml'
-            issuer:
-              - added|modified: 'cluster-configs/issuer.yaml'
-
-        # run only if some file in 'src' folder was changed
-
-      - if: steps.changes.outputs.fluent == 'true'
-        name: fluent-bit
-        run: |
-          echo true
-      - if: steps.changes.outputs.cert-manager == 'true'
-        name: cert-manager
-        run: |
-          echo true
-      - if: steps.changes.outputs.nginx == 'true'
-        name: nginx
-        run: |
-          echo true
-      - if: steps.changes.outputs.issuer == 'true'
-        name: issuer
-        run: |
-          echo true
+    uses: Piyush-Singh-ZS/Test-enc/.github/workflows/test.yaml@ui-reusable
