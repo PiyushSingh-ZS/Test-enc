@@ -23,6 +23,6 @@ jobs:
         run: |
           echo ${{ env.branch_flag }} 
 
-      - name: test45
-        if: ${{ env.branch_flag }}
+      - if: ${{ env.branch_flag }}
+        name: test45
         run: echo "should run"
