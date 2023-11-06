@@ -22,11 +22,11 @@ jobs:
     steps:
       - name: debug
         run: |
-          echo {{ env.branch_flag }} && {{ env.event_flag }}
-          echo {{ env.branch_flag }} 
-          echo {{ env.event_flag }}
+          echo ${{ env.branch_flag }} && ${{ env.event_flag }}
+          echo ${{ env.branch_flag }} 
+          echo ${{ env.event_flag }}
 
       - uses: actions/upload-artifact@v3
-        if: {{ env.branch_flag }} && {{ env.event_flag }}
+        if: ${{ env.branch_flag }} && ${{ env.event_flag }}
         name: upload zipped build and node modules
         run: echo "should run"
