@@ -30,8 +30,8 @@ jobs:
         with:
           credentials_json: ${{ secrets.DEPLOYMENT_KEY }}
 
-      - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v2'
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
 
       - name: Update Kubectl component
         run: gcloud --quiet components update kubectl
