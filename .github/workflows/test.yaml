@@ -1,29 +1,45 @@
-name: "test and linters"
+name: Build and Deploy for Go service
+
 on:
-  workflow_call:
-
-    inputs:
-      BRANCH_NAME:
-        description: 'name of branch main/master'
-        required: false
-        type: string
-        default: "main"
-
-
+  push:
+    branches: [ development ]
+  pull_request:
+    branches: [ development ]
 
 env:
-  branch_flag: ${{ github.event_name == 'push' && github.ref == 'refs/heads/${{ inputs.BRANCH_NAME }}' }}
-  ref: ${{ github.ref }}
+  APP_NAME: test-serv
+  NAMESPACE: test-app
+  CLUSTER_NAME: test-prod-2105
+  CLUSTER_PROJECT: quick-flame-421806
+  GAR_PROJECT: quick-flame-421806
+  GAR_REGISTRY: kops-dev
+
 jobs:
-  build:
+  deployment:
     runs-on: ubuntu-latest
-    name: 🧪 Test and 🔨 Build
+    name: 🚀 Deploy
+    env:
+      image: "manasa2210/sample-app:v0.0.1"
 
     steps:
-      - name: debug
-        run: |
-          echo ${{ env.branch_flag }} 
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
-      - if: ${{ env.branch_flag }}
-        name: test45
-        run: echo "should run"
+      - name: Authorize to GCP service account
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.DEPLOYMENT_KEY }}
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+
+      - name: Update Kubectl component
+        run: gcloud --quiet components update kubectl
+
+      - name: Set GCloud Project and Fetch Cluster Credentials
+        run:
+          gcloud container clusters get-credentials ${{ env.CLUSTER_NAME }} --region=us-central1 --project=${{ env.CLUSTER_PROJECT }}
+
+      - name: Update Deployment Image
+        run:
+          kubectl set image deployment/${{ env.APP_NAME }} ${{ env.APP_NAME }}=${{ env.image }} --namespace ${{ env.NAMESPACE }}
