@@ -72,3 +72,5 @@ All the listed values are related to the alerts.
 |-------------------------------------------------|--------|--------------------------------------------------------|---------|
 | alerts.standard.infra.cronjob_restart_threshold | number | Alert if cronjob execution failed beyond the threshold | `0`     |
 
+
+
