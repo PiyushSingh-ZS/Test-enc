@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "{{ .Values.name }}-pvc"
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app.kubernetes.io/component: master
+spec:
+  accessModes: 
+  {{- range .Values.master.persistence.accessModes }}
+    - {{ . | quote }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.master.persistence.size | quote }}
+  {{- if .Values.master.persistence.storageClass }}
+  storageClassName: {{ .Values.master.persistence.storageClass | default "standard" }}
+  {{- else }}
+  storageClassName: ""
+  {{- end }}

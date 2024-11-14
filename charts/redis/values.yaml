@@ -1,0 +1,94 @@
+# Default values for redis.
+# Declare variables to be passed into your templates.
+
+name: rediss
+
+# Redis container image configuration
+image:
+  repository: redis
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# Headless-service configuration
+service:
+  type: ClusterIP
+  port: 6379
+  targetPort: redis #6379
+
+# Master node configuration
+master:
+  count: 1
+  replicas: 1
+
+  #Ports
+  portNames:
+    redis: "tcp-redis"
+
+  nodePorts:
+    redis: ""
+
+  containerPorts:
+    redis: 6379
+  
+  
+  # Persistence options
+  persistence:
+    enabled: true
+    medium: ""
+    sizeLimit: ""
+    storageClass: standard
+    accessModes:
+      - ReadWriteOnce
+    size: 8Gi
+
+
+  # ServiceAccount configuration
+  serviceAccount:
+    create: true
+    automountServiceAccountToken: true #false
+    annotations: {}
+
+  # RollingUpdate strategy
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      partition: 0
+
+  nodeSelector: {}
+  replication_mode: master
+
+  # Probes
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 20
+    periodSeconds: 5
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 5
+
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 20
+    periodSeconds: 5
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 5
+
+  # Resources
+  resources:
+    requests:
+      cpu: 2
+      memory: 512Mi
+    limits:
+      cpu: 3
+      memory: 1024Mi
+
+# Secrets
+secret:
+  passwordKey: redis-password
+
+# Security context configuration
+securityContext:
+  enabled: true
+  fsGroup: 1001
+  runAsUser: 1001
