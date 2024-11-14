@@ -13,7 +13,7 @@ entries:
       url: zop.dev
     name: cron-job
     urls:
-    - https://helm.zop.dev/cron-job-v0.0.1.tgz
+    - https://https://piyushsingh-zs.github.io/Test-enc/cron-job-v0.0.1.tgz
     version: v0.0.1
   mysql:
   - apiVersion: v1
@@ -27,7 +27,7 @@ entries:
       url: zop.dev
     name: mysql
     urls:
-    - https://helm.zop.dev/mysql-v0.0.1.tgz
+    - https://https://piyushsingh-zs.github.io/Test-enc/mysql-v0.0.1.tgz
     version: v0.0.1
   service:
   - apiVersion: v1
@@ -42,6 +42,6 @@ entries:
       url: zop.dev
     name: service
     urls:
-    - https://helm.zop.dev/service-v0.0.1.tgz
+    - https://https://piyushsingh-zs.github.io/Test-enc/service-v0.0.1.tgz
     version: v0.0.1
 generated: "2024-11-14T13:49:07.752413+05:30"
