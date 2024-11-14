@@ -1,0 +1,16 @@
+mysqlRootPassword: "hello"
+updateStrategy:
+  type: RollingUpdate
+
+diskSize: "10Gi"
+
+image: mysql:8.0
+
+# Resource configuration
+resources:
+  requests:
+    cpu: "500m"
+    memory: "256M"
+  limits:
+    cpu: "1500m"
+    memory: "1Gi"
