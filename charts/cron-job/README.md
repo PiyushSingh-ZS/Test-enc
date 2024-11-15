@@ -1,6 +1,6 @@
 # CronJob
 
-Installs the cron-job, a collection of kubernetes manifest for CronJob, Services, ServiceMonitor, Alerts, etc.
+Installs the cron-job, a collection of kubernetes manifest for CronJob, Alerts, etc.
 
 ## Prerequisites
 
@@ -10,7 +10,7 @@ Installs the cron-job, a collection of kubernetes manifest for CronJob, Services
 ## Get Helm Repository Info
 
 ```console
-helm repo add kops-dev https://kops-dev.github.io/helm
+helm repo add zopdev https://helm.zop.dev
 helm repo update
 ```
 
@@ -19,7 +19,7 @@ _See [`helm repo`](https://helm.sh/docs/helm/helm_repo/) for command documentati
 ## Install Helm Chart
 
 ```console
-helm install [RELEASE_NAME] kops-dev/cron-job
+helm install [RELEASE_NAME] zopdev/cron-job
 ```
 
 _See [configuration](#configuration) below._
@@ -45,7 +45,7 @@ _See [helm uninstall](https://helm.sh/docs/helm/helm_uninstall/) for command doc
 | env                     | map     | Environment Variables can be provided to the container                                                                                                        | `eg APP_NAME: hello-api`             |
 | envFrom.configmaps      | list    | List of Configmaps from which env should be mounted on to containers                                                                                          | `[]`                                 |
 | envFrom.secrets         | list    | List of secrets from which env should be mounted on to containers                                                                                             | `[]`                                 |
-| image                   | string  | Docker container image with tag                                                                                                                               | `ghcr.io/kops-dev/sample-api:latest` |
+| image                   | string  | Docker container image with tag                                                                                                                               | `zopdev/sample-go-api:latest` |
 | imagePullSecrets        | list    | configuration to specify secrets that contain credentials for pulling container images from private registries                                                | `[]`                                 |
 | maxCPU                  | string  | Specify the maximum amount of CPU that the container is limited to use                                                                                        | `"500m"`                             |
 | maxMemory               | string  | Specify the maximum amount of Memory that the container is limited to use                                                                                     | `"512Mi"`                            |
@@ -71,6 +71,4 @@ All the listed values are related to the alerts.
 | Inputs                                          | Type   | <div style="width:400px">Description</div>             | Default |
 |-------------------------------------------------|--------|--------------------------------------------------------|---------|
 | alerts.standard.infra.cronjob_restart_threshold | number | Alert if cronjob execution failed beyond the threshold | `0`     |
-
-
 

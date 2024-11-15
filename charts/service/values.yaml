@@ -5,7 +5,10 @@ name: hello-api
 replicaCount: 2
 
 # Docker container image with tag
-image: "ghcr.io/kops-dev/sample-api:latest"
+image: "zopdev/sample-go-api:latest"
+
+Containers:
+  privileged: false
 
 imagePullSecrets:
   # - gcr-secrets
@@ -61,14 +64,16 @@ env:
 appSecrets: false
 
 volumeMounts:
+  emptyDir:
+#    - name: zopdev-emptydir
   configmaps:
-#    - name: kops-configmap
+#    - name: zopdev-configmap
 #      mountPath: /etc/env
   secrets:
-#    - name: kops-secret
+#    - name: zopdev-secret
 #      mountPath: /etc/secret
   pvc:
-#    - name: kops-volume
+#    - name: zopdev-volume
 #      mountPath: /etc/data
 
 alerts:
