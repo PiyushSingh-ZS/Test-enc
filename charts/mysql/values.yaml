@@ -1,4 +1,4 @@
-mysqlRootPassword: pass1
+mysqlRootPassword:
 updateStrategy:
   type: RollingUpdate
 
