@@ -1,53 +1,41 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: "{{ .Values.name }}-redis"
-  namespace: {{ .Release.Namespace | quote }}
+  name: {{ .Release.Name }}-redis
+  namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/component: master
+    app.kubernetes.io/part-of: redis
+    app: {{ .Release.Name }}-redis
 spec:
-  replicas: {{ .Values.master.replicas }}
+  replicas: 1
   serviceName: "{{ .Values.name }}-redis-headless-service"
   selector:
     matchLabels:
-      app.kubernetes.io/component: master
+      app.kubernetes.io/part-of: redis
+      app: {{ .Release.Name }}-redis
   updateStrategy:
-    type: {{ .Values.master.updateStrategy.type }}
-    {{- if .Values.master.updateStrategy.rollingUpdate }}
-    rollingUpdate:
-      partition: {{ .Values.master.updateStrategy.rollingUpdate.partition }}
-    {{- end }}
+    type: {{ .Values.updateStrategy.type }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/component: master
+        app.kubernetes.io/part-of: redis
+        app: {{ .Release.Name }}-redis
     spec:
-      automountServiceAccountToken: {{ .Values.master.serviceAccount.automountServiceAccountToken }}
-      {{- if .Values.master.nodeSelector }}
-      nodeSelector:
-        {{- toYaml .Values.master.nodeSelector | nindent 8 }}
-      {{- end }}
       containers:
         - name: redis
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- if .Values.securityContext.enabled }}
-          securityContext:
-            runAsUser: {{ .Values.securityContext.runAsUser }}
-          {{- end }}
-          ports:
-            - name: redis
-              containerPort: {{ .Values.master.containerPorts.redis }}
+          image: {{ .Values.image }}
+          resources:
+            requests:
+              memory: {{ .Values.resources.requests.memory }}
+              cpu: {{ .Values.resources.requests.cpu}}
+            limits:
+              memory: {{ .Values.resources.limits.memory }}
+              cpu: {{ .Values.resources.limits.cpu }}
           env:
-            - name: REDIS_REPLICATION_MODE
-              value: {{.Values.master.replication_mode | quote}}
-            - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ .Values.name }}-secret"
-                  key: redis-password
             - name: REDIS_PORT
-              value: {{ .Values.master.containerPorts.redis | quote }}
+              value: "6379"
+          ports:
+            - containerPort: 3306
           livenessProbe:
             exec:
               command:
@@ -68,43 +56,17 @@ spec:
             timeoutSeconds: {{ add1 .Values.master.readinessProbe.timeoutSeconds }}
             successThreshold: {{ .Values.master.readinessProbe.successThreshold }}
             failureThreshold: {{ .Values.master.readinessProbe.failureThreshold }}
-          {{- if .Values.master.resources }}
-          resources:
-            {{ .Values.master.resources | toYaml | nindent 12 }}
-          {{- end }}
+
+
           volumeMounts:
-            - name: redis-data
-              mountPath: /data
-            - name: redis-config
-              mountPath: /usr/local/etc/redis
-              subPath: master.conf
-      volumes:
-        - name: redis-config
-          configMap:
-            name: "{{ .Values.name }}-redis-configmap"
-        - name: redis-data
-          persistentVolumeClaim:
-            claimName: "{{ .Values.name }}-pvc"
+            - name: {{.Release.Name }}-redis-persistent-storage
+              mountPath: /var/lib/redis
   volumeClaimTemplates:
-  - metadata:
-      name: redis-data
-      labels:
-        app.kubernetes.io/component: master
-    spec:
-      accessModes:
-      {{- range .Values.master.persistence.accessModes }}
-        - {{ . | quote }}
-      {{- end }}
-      resources:
-        requests:
-          storage: {{ .Values.master.persistence.size | quote }}
-      storageClassName: {{ .Values.master.persistence.storageClass }}
-      selector:
-        matchLabels:
-          app.kubernetes.io/component: master
-  updateStrategy:
-    type: {{ .Values.master.updateStrategy.type }}
-    {{- if .Values.master.updateStrategy.rollingUpdate }}
-    rollingUpdate:
-      partition: {{ .Values.master.updateStrategy.rollingUpdate.partition }}
-    {{- end }}
+    - metadata:
+        name: {{.Release.Name }}-redis-persistent-storage
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.diskSize }}

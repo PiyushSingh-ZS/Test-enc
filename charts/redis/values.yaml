@@ -3,7 +3,7 @@ updateStrategy:
 
 diskSize: "10Gi"
 
-image: mysql:8.0
+image:
 
 # Resource configuration
 resources:
