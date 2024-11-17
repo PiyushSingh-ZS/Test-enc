@@ -27,6 +27,10 @@ spec:
       {{- end }}
       volumes:
       {{- if .Values.volumeMounts }}
+      {{- range $k,$v := .Values.volumeMounts.emptyDir }}
+        - name: {{ $v.name }}
+          emptyDir: {}
+      {{- end }}
       {{- range $k,$v := .Values.volumeMounts.configmaps }}
         - name: {{ $v.name }}
           configMap:
@@ -74,11 +78,17 @@ spec:
       containers:
         - name: {{ .Values.name }}
           image: {{ .Values.image }}
+          {{- if .Values.Containers.privileged }}
+          securityContext:
+            privileged: true
+          {{- end }}
           ports:
             - name: http-port
               containerPort: {{ .Values.httpPort }}
+            {{- if and .Values.metricsPort (ne (int .Values.metricsPort) 0) }}
             - name: metrics-port
               containerPort: {{ .Values.metricsPort }}
+            {{- end}}
             {{- range $k, $v := .Values.ports}}
             - name: {{ $k }}
               containerPort: {{ $v }}
@@ -92,6 +102,22 @@ spec:
             - secretRef:
                 name: {{ $name }}
                 {{- end }}
+            {{- if .Values.datastores.mysql }}
+            {{- range $i, $k := .Values.datastores.mysql }}
+            - configMapRef:
+                name: {{ $k.name }}-{{ $k.database }}-{{ $.Release.Name}}-mysql-configmap
+            - secretRef:
+                name: {{ $k.name }}-{{ $k.database }}-{{ $.Release.Name}}-mysql-database-secret
+            {{- end }}
+            {{- end }}
+            {{- if .Values.datastores.redis }}
+            {{- range .Values.datastores.redis }}
+            - configMapRef:
+                name: {{ .name }}-configmap
+            - secretRef:
+                name: {{ .name }}-database-secret
+            {{- end }}
+            {{- end }}
           env:
             {{- range $k,$v := .Values.env }}
               {{- if ne (toString $v) ""}}
@@ -107,6 +133,13 @@ spec:
             {{- if ne $v.subPath "" }}
               subPath: {{ $v.subPath }}
             {{- end }}
+          {{- end }}
+          {{- range $k,$v := .Values.volumeMounts.emptyDir }}
+            - name: {{ $v.name }}
+              mountPath: {{ $v.mountPath }}
+                  {{- if ne $v.subPath "" }}
+              subPath: {{ $v.subPath }}
+                  {{- end }}
           {{- end }}
           {{- range $k,$v := .Values.volumeMounts.secrets }}
             - name: {{ $v.name }}

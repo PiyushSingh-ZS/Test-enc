@@ -5,7 +5,10 @@ name: hello-api
 replicaCount: 2
 
 # Docker container image with tag
-image: "ghcr.io/kops-dev/sample-api:latest"
+image: "zopdev/sample-go-api:latest"
+
+Containers:
+  privileged: false
 
 imagePullSecrets:
   # - gcr-secrets
@@ -61,14 +64,16 @@ env:
 appSecrets: false
 
 volumeMounts:
+  emptyDir:
+#    - name: zopdev-emptydir
   configmaps:
-#    - name: kops-configmap
+#    - name: zopdev-configmap
 #      mountPath: /etc/env
   secrets:
-#    - name: kops-secret
+#    - name: zopdev-secret
 #      mountPath: /etc/secret
   pvc:
-#    - name: kops-volume
+#    - name: zopdev-volume
 #      mountPath: /etc/data
 
 alerts:
@@ -110,3 +115,7 @@ grafanaDashboard:
 #  sample format for using json model
 #  custom_dashboard.json: 
 #  {"annotations":{"list":[{"builtIn":1,"datasource":"-- Grafana --","enable":true,"hide":true,"iconColor":"rgba(0, 211, 255, 1)","name":"Annotations & Alerts","target":{"limit":100,"matchAny":false,"tags":[],"type":"dashboard"},"type":"dashboard"}]},"editable":true,"gnetId":null,"graphTooltip":0,"id":27,"links":[],"panels":[],"schemaVersion":30,"style":"dark","tags":[],"templating":{"list":[]},"time":{"from":"now-6h","to":"now"},"timepicker":{},"timezone":"","title":"Custom dashboard","version":1} 
+
+datastores:
+  mysql:
+  redis:

@@ -10,7 +10,7 @@ Installs the service, a collection of kubernetes manifest for Deployment, Servic
 ## Get Helm Repository Info
 
 ```console
-helm repo add kops-dev https://kops-dev.github.io/helm
+helm repo add zopdev https://helm.zop.dev
 helm repo update
 ```
 
@@ -19,7 +19,7 @@ _See [`helm repo`](https://helm.sh/docs/helm/helm_repo/) for command documentati
 ## Install Helm Chart
 
 ```console
-helm install [RELEASE_NAME] kops-dev/service
+helm install [RELEASE_NAME] zopdev/service
 ```
 
 _See [configuration](#configuration) below._
@@ -47,7 +47,7 @@ _See [helm uninstall](https://helm.sh/docs/helm/helm_uninstall/) for command doc
 | envFrom.secrets                    | list    | List of secrets from which env should be mounted on to containers                                                   | `[]`                                 |
 | heartbeatURL                       | string  | Heartbeat URL of the service                                                                                        | `""`                                 |
 | httpPort                           | number  | HTTP Port on which container runs its services                                                                      | `8000`                               |
-| image                              | string  | Docker container image with tag                                                                                     | `ghcr.io/kops-dev/sample-api:latest` |
+| image                              | string  | Docker container image with tag                                                                                     | `zopdev/sample-go-api:latest` |
 | imagePullSecrets                   | list    | configuration to specify secrets that contain credentials for pulling container images from private registries      | `[]`                                 |
 | livenessProbe.enable               | boolean | Whether liveness Probe should be configured on the container or not                                                 | `false`                              |
 | livenessProbe.initialDelaySeconds  | number  | Specifies how long Kubernetes should wait after the container starts before it begins liveness probes (in seconds)  | `3`                                  |

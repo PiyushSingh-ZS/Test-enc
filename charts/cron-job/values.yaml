@@ -2,7 +2,7 @@
 name: hello-api
 
 # Docker container image with tag
-image: "ghcr.io/kops-dev/sample-api:latest"
+image: "zopdev/sample-go-api:latest"
 
 imagePullSecrets:
 # - gcr-secrets
@@ -37,16 +37,19 @@ appSecrets: false
 
 volumeMounts:
   configmaps:
-  #    - name: kops-configmap
+  #    - name: zopdev-configmap
   #      mountPath: /etc/env
   secrets:
-  #    - name: kops-secret
+  #    - name: zopdev-secret
   #      mountPath: /etc/secret
   pvc:
-#    - name: kops-volume
+#    - name: zopdev-volume
 #      mountPath: /etc/data
 
 alerts:
   standard:
     infra:
       cronjobFailedThreshold: 0
+datastores:
+  mysql:
+  redis:
