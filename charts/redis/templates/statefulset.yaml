@@ -1,14 +1,13 @@
-{{- if gt (int64 .Values.master.count) 0 -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: "{{ .Values.name }}-statefulset"
+  name: "{{ .Values.name }}-redis"
   namespace: {{ .Release.Namespace | quote }}
   labels:
     app.kubernetes.io/component: master
 spec:
   replicas: {{ .Values.master.replicas }}
-  serviceName: "{{ .Values.name }}-headless-service"
+  serviceName: "{{ .Values.name }}-redis-headless-service"
   selector:
     matchLabels:
       app.kubernetes.io/component: master
@@ -23,7 +22,6 @@ spec:
       labels:
         app.kubernetes.io/component: master
     spec:
-      serviceAccountName: "{{ .Values.name }}-serviceaccount"
       automountServiceAccountToken: {{ .Values.master.serviceAccount.automountServiceAccountToken }}
       {{- if .Values.master.nodeSelector }}
       nodeSelector:
@@ -83,7 +81,7 @@ spec:
       volumes:
         - name: redis-config
           configMap:
-            name: "{{ .Values.name }}-configmap"
+            name: "{{ .Values.name }}-redis-configmap"
         - name: redis-data
           persistentVolumeClaim:
             claimName: "{{ .Values.name }}-pvc"
@@ -110,4 +108,3 @@ spec:
     rollingUpdate:
       partition: {{ .Values.master.updateStrategy.rollingUpdate.partition }}
     {{- end }}
-{{- end }}
