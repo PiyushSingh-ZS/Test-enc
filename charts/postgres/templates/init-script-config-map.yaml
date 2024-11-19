@@ -9,7 +9,7 @@ data:
     CREATE EXTENSION IF NOT EXISTS dblink;
     DO $$ BEGIN
       IF NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = '{{ $service.database }}') THEN
-        PERFORM dblink_exec('dbname=postgres', 'CREATE DATABASE {{ $service.database }}');
+        PERFORM dblink_exec('dbname=postgres', 'CREATE DATABASE "{{ $service.database }}"');
     END IF;
     END $$;
 
