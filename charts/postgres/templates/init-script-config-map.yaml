@@ -1,0 +1,31 @@
+{{- range $index, $service := .Values.services }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $.Release.Name }}-{{ $service.name }}-init-script
+  namespace: {{ $.Release.Namespace }}
+data:
+  db-init.sql: |
+  
+    CREATE EXTENSION IF NOT EXISTS dblink;
+    DO $$ BEGIN
+      IF NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = '{{ $service.database }}') THEN
+        PERFORM dblink_exec('dbname=postgres', 'CREATE DATABASE {{ $service.database }}');
+      END IF;
+    END $$;
+
+    \connect {{ $service.database }}
+
+    DO $$ BEGIN
+      IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '{{ $service.name }}_user') THEN
+        CREATE ROLE {{ $service.name }}_user WITH LOGIN PASSWORD '{{ $service.password }}';
+      END IF;
+    END $$;
+
+    ALTER ROLE {{ $service.name }}_user CREATEDB;
+    GRANT CONNECT ON DATABASE {{ $service.database }} TO {{ $service.name }}_user;
+    GRANT USAGE, SELECT, INSERT, UPDATE, DELETE, REFERENCES, TRIGGER ON ALL TABLES IN SCHEMA public TO {{ $service.name }}_user;
+    GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA public TO {{ $service.name }}_user;
+    GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO {{ $service.name }}_user;
+---
+{{- end }}

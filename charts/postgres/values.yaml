@@ -1,0 +1,22 @@
+name: postgres
+postgresRootPassword:
+
+image:
+  name: postgres
+  tag: 10.1
+
+# Resource configuration
+resources:
+  requests:
+    cpu: "500m"
+    memory: "256M"
+  limits:
+    cpu: "1500m"
+    memory: "1Gi"
+
+diskSize: "10Gi"
+
+updateStrategy:
+  type: RollingUpdate
+
+services:
