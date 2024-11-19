@@ -6,7 +6,7 @@ metadata:
   namespace: {{ $.Release.Namespace }}
 data:
   DB_DIALECT: "postgres"
-  DB_USER: "{{ $service.name }}-user"
+  DB_USER: "{{ $service.name }}_user"
   DB_PORT: "5432"
   DB_NAME: "{{ $service.database }}"
   DB_HOST: "{{ $.Release.Name}}-postgres"
