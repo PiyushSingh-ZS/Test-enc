@@ -77,20 +77,26 @@ spec:
                 - secretRef:
                     name: {{ $name }}
                  {{- end }}
-                {{- if .Values.datastores.mysql }}
+                {{- if and .Values.datastores .Values.datastores.mysql }}
                 {{- range $i, $k := .Values.datastores.mysql }}
                 - configMapRef:
-                    name: {{ $k.name }}-{{ $k.database }}-{{ $.Release.Name}}-mysql-configmap
+                    name: {{ $k.datastore }}-{{ $k.database }}-{{ $.Release.Name}}-mysql-configmap
                 - secretRef:
-                    name: {{ $k.name }}-{{ $k.database }}-{{ $.Release.Name}}-mysql-database-secret
+                    name: {{ $k.datastore }}-{{ $k.database }}-{{ $.Release.Name}}-mysql-database-secret
                  {{- end }}
                  {{- end }}
-                 {{- if .Values.datastores.redis }}
-                 {{- range .Values.datastores.redis }}
+                {{- if and .Values.datastores .Values.datastores.postgres }}
+                {{- range $i, $k := .Values.datastores.postgres }}
                 - configMapRef:
-                    name: {{ .name }}-configmap
+                    name: {{ $k.datastore }}-{{ $k.database }}-{{ $.Release.Name}}-postgres-configmap
                 - secretRef:
-                    name: {{ .name }}-database-secret
+                    name: {{ $k.datastore }}-{{ $k.database }}-{{ $.Release.Name}}-postgres-database-secret
+                {{- end }}
+                {{- end }}
+                 {{- if and .Values.datastores .Values.datastores.redis }}
+                 {{- range $i, $k := .Values.datastores.redis }}
+                - configMapRef:
+                    name: {{ $k.datastore }}-redis-service-configmap
                  {{- end }}
                  {{- end }}
               env:

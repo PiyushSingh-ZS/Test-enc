@@ -1,0 +1,5 @@
+apiVersion: v2
+appVersion: 7.4.1
+name: redis
+description: A Helm chart for Redis, a powerful in-memory data structure store.
+version: 1.0.0

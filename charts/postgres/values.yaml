@@ -1,6 +1,7 @@
-postgresRootPassword:
+postgresRootPassword: "mypass"
 
-image: postgres:10.1
+image: "postgres:15.9"
+
 
 # Resource configuration
 resources:
