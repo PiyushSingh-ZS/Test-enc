@@ -6,6 +6,15 @@ metadata:
   namespace: {{ $.Release.Namespace }}
 data:
   db-init.sql: |
+    CREATE EXTENSION IF NOT EXISTS dblink;
+    DO $$ BEGIN
+      IF NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = '{{ $service.database }}') THEN
+        PERFORM dblink_exec('dbname=postgres', 'CREATE DATABASE {{ $service.database }}');
+    END IF;
+    END $$;
+
+    \connect {{ $service.database }}
+
     REVOKE ALL ON SCHEMA public FROM PUBLIC;
     DO
     $do$
