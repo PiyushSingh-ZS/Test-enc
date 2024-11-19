@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image}}"
           imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 5432
@@ -40,6 +40,8 @@ spec:
               secretKeyRef:
                 name: {{ $.Release.Name }}-postgres-root-secret
                 key: postgres-password
+          - name: PGDATA
+            value: "/var/lib/postgresql/data/db/"
           livenessProbe:
             exec:
               command:
@@ -61,6 +63,7 @@ spec:
           volumeMounts:
             - name: {{ $.Release.Name }}-persistent-storage
               mountPath: /var/lib/postgresql/data
+              subPath: data
   volumeClaimTemplates:
   - metadata:
       name: {{ $.Release.Name }}-persistent-storage

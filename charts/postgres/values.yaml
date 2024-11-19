@@ -1,9 +1,7 @@
-name: postgres
-postgresRootPassword:
+postgresRootPassword: "mypass"
 
-image:
-  name: postgres
-  tag: 10.1
+image: "postgres:15.9"
+
 
 # Resource configuration
 resources:
