@@ -1,39 +1,63 @@
-name: Release Charts
+name: Publish zop-api image
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - 'charts/**'
+    tags:
+      - 'v*'
+  pull_request_review:
+    types:
+      - requested
 
 jobs:
-  release:
+  test-and-code-quality:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
     steps:
-      - name: Checkout Code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Configure Git
-        run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.22'
 
-      - name: Install Helm
-        uses: azure/setup-helm@v4
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-      - name: Helm Lint
+      - name: Get dependencies
         run: |
-          cd charts/service
-          helm lint
-          cd ../..
-          cd charts/cron-job
-          helm lint
-          cd ../..
+          go mod download
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.6.0
-        env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          CR_GENERATE_RELEASE_NOTES: true
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: 1.59.x
+          args: --timeout 8m
+          skip-pkg-cache: true
+          skip-build-cache: true
+
+      - name: Test
+        run: |
+          export APP_ENV=test
+          go test gofr.dev/examples/... -v -short -coverprofile packageWithpbgo.cov -coverpkg=gofr.dev/examples/...
+          grep -vE '^gofr\.dev\/.*\.pb\.go' packageWithpbgo.cov > profile.cov
+          go tool cover -func profile.cov
+
+  publich-image:
+    if: ${{ startsWith(github.ref, 'refs/tags/v')}}
+    name: 🔨 Build and 🐳 Dockerize
+    needs: test-and-code-quality
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract Release Tag
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
