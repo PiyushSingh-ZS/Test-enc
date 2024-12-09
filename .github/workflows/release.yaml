@@ -4,13 +4,12 @@ on:
   push:
     tags:
       - 'v*'
-  pull_request_review:
-    types:
-      - requested
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test-and-code-quality:
-    if: ${{ github.event.pull_request.base.ref == 'main' }}
     runs-on: ubuntu-latest
 
     permissions:
@@ -33,7 +32,7 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
-          version: 1.59.x
+          version: v1.59.1
           args: --timeout 8m
           skip-pkg-cache: true
           skip-build-cache: true
@@ -41,7 +40,7 @@ jobs:
       - name: Test
         run: |
           export APP_ENV=test
-          go test gofr.dev/examples/... -v -short -coverprofile packageWithpbgo.cov -coverpkg=gofr.dev/examples/...
+          go test ./... -v -short -coverprofile packageWithpbgo.cov -coverpkg=./...
           grep -vE '^gofr\.dev\/.*\.pb\.go' packageWithpbgo.cov > profile.cov
           go tool cover -func profile.cov
 
