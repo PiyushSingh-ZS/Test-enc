@@ -4,13 +4,12 @@ on:
   push:
     tags:
       - 'v*'
-  pull_request_review:
-    types:
-      - requested
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test-and-code-quality:
-    if: ${{ github.event.pull_request.base.ref == 'main' }}
     runs-on: ubuntu-latest
 
     permissions:
