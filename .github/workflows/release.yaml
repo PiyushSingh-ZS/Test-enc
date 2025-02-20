@@ -2,9 +2,9 @@ name: Build and Deploy
 
 on:
   push:
-    branches: [ development ]
+    branches: [ main ]
   pull_request:
-    branches: [ development ]
+    branches: [ main ]
 
 env:
   ACCOUNT_ID: 992382480133
