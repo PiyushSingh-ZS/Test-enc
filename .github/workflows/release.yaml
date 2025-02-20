@@ -2,9 +2,9 @@ name: Build and Deploy for Go service
 
 on:
   push:
-    branches: [ development ]
+    branches: [ main ]
   pull_request:
-    branches: [ development ]
+    branches: [ main ]
 
 env:
   SERVICE_NAME: multipleds-svc
