@@ -1,62 +1,84 @@
-name: Publish zop-api image
+name: Build and Deploy for Go service
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches: [ development ]
   pull_request:
-    branches:
-      - main
+    branches: [ development ]
+
+env:
+  SERVICE_NAME: multipleds-svc
+  NAMESPACE: test-multiple-ds
+  CLUSTER_NAME: gcp19feb
+  CLUSTER_PROJECT: zopdev-test
+  GAR_PROJECT: zopdev-test
+  GAR_REGISTRY: zop-dev
 
 jobs:
-  test-and-code-quality:
+  dockerize:
     runs-on: ubuntu-latest
+    name: 🐳 Dockerize
 
-    permissions:
-      contents: read
-      packages: write
-
+    outputs:
+      image: ${{ steps.output-image.outputs.image }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Go
-        uses: actions/setup-go@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v4
         with:
-          go-version: '1.22'
-
+          go-version: '1.21'
       - name: Get dependencies
         run: |
           go mod download
 
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v3
-        with:
-          version: v1.59.1
-          args: --timeout 8m
-          skip-pkg-cache: true
-          skip-build-cache: true
-
-      - name: Test
+      - name: Build
         run: |
-          export APP_ENV=test
-          go test ./... -v -short -coverprofile packageWithpbgo.cov -coverpkg=./...
-          grep -vE '^gofr\.dev\/.*\.pb\.go' packageWithpbgo.cov > profile.cov
-          go tool cover -func profile.cov
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -buildvcs=false -o main
 
-  publich-image:
-    if: ${{ startsWith(github.ref, 'refs/tags/v')}}
-    name: 🔨 Build and 🐳 Dockerize
-    needs: test-and-code-quality
+      - name: Login to GAR
+        uses: docker/login-action@v2
+        with:
+          registry: us-central1-docker.pkg.dev
+          username: _json_key
+          password: ${{ secrets.UI_COMPONENTS_APP123_DEPLOYMENT_KEY }}
+
+      - name: Build and Push Docker Image to GAR
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: .
+          file: ./Dockerfile
+          tags:
+            us-central1-docker.pkg.dev/${{ env.GAR_PROJECT }}/${{ env.GAR_REGISTRY }}/${{ env.NAMESPACE }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
+      - id: output-image
+        run:
+          echo "image=echo us-central1-docker.pkg.dev/${{ env.GAR_PROJECT }}/${{ env.GAR_REGISTRY }}/${{ env.NAMESPACE }}/${{ env.SERVICE_NAME }}:${{ github.sha }}" >> "$GITHUB_OUTPUT"
+
+  deployment:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-      packages: write
+    needs: dockerize
+    name: 🚀 Deploy
+    env:
+      image: ${{ needs.dockerize.outputs.image }}
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
-      - name: Extract Release Tag
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Authorize to GCP service account
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.UI_COMPONENTS_APP123_DEPLOYMENT_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Update Kubectl component
+        run: gcloud --quiet components update kubectl
+
+      - name: Set GCloud Project and Fetch Cluster Credentials
+        run:
+          gcloud container clusters get-credentials ${{ env.CLUSTER_NAME }} --region=us-central1 --project=${{ env.CLUSTER_PROJECT }}
+
+      - name: Update Deployment Image
+        run:
+          kubectl set image deployment/${{ env.SERVICE_NAME }} ${{ env.SERVICE_NAME }}=${{ env.image }} --namespace ${{ env.NAMESPACE }}
