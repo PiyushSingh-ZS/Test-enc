@@ -21,7 +21,6 @@ FROM alpine:latest
 # Copy the built binary from the builder stage
 COPY --from=builder /app/main .
 
-COPY configs ./configs
 # Give execution permissions
 RUN chmod +x /main
 
