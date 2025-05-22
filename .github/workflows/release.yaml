@@ -22,12 +22,12 @@ jobs:
             --arg password "$SVC_PRI_PASSWORD" \
             --argjson credentials "$AZURE_CREDENTIALS" \
             '{SVC_PRI_USERNAME: $username, SVC_PRI_PASSWORD: $password, AZURE_CREDENTIALS: $credentials}' > secrets.json
-           echo "✅ Secrets written to secrets.json"
-      - name: Show file structure (partial visibility)
-            run: |
-              jq 'keys' secrets.json
+          echo "✅ Secrets written to secrets.json"
 
-      # ✅ Best: Upload as artifact and download securely
+      - name: Show file structure (partial visibility)
+        run: |
+          jq 'keys' secrets.json
+
       - name: Upload secret file as artifact
         uses: actions/upload-artifact@v4
         with:
