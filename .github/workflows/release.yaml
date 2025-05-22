@@ -1,35 +1,42 @@
-name: Build and Deploy
+name: Build and Deploy for Go service
 
 on:
   push:
-    branches: [ main ]
+    branches: [ development ]
   pull_request:
-    branches: [ main ]
+    branches: [ development ]
+
+env:
+  APP_NAME: service1
+  NAMESPACE: app1
+  CLUSTER_NAME: cl22may-aks
+  resource_group: Testing-migration
+  AZURE_LOGIN_SERVER: zopdevcc09cb5dc9a.azurecr.io
 
 jobs:
-  debug-secrets:
+  
+
+  deployment:
     runs-on: ubuntu-latest
-
+    name: Deploy
     steps:
-      - name: Write secrets to JSON file
-        env:
-          SVC_PRI_USERNAME: ${{ secrets.SVC_PRI_USERNAME }}
-          SVC_PRI_PASSWORD: ${{ secrets.SVC_PRI_PASSWORD }}
-          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-        run: |
-          jq -n \
-            --arg username "$SVC_PRI_USERNAME" \
-            --arg password "$SVC_PRI_PASSWORD" \
-            --argjson credentials "$AZURE_CREDENTIALS" \
-            '{SVC_PRI_USERNAME: $username, SVC_PRI_PASSWORD: $password, AZURE_CREDENTIALS: $credentials}' > secrets.json
-          echo "✅ Secrets written to secrets.json"
-
-      - name: Show file structure (partial visibility)
-        run: |
-          jq 'keys' secrets.json
-
-      - name: Upload secret file as artifact
-        uses: actions/upload-artifact@v4
+      - name: Azure login
+        id: login
+        uses: azure/login@v1.4.3
         with:
-          name: full-secrets
-          path: secrets.json
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set AKS context
+        id: set-context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: ${{ env.resource_group }}
+          cluster-name: ${{ env.CLUSTER_NAME }}
+          admin: true
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3 
+
+      - name: Deploy to AKS
+        run: kubectl set image deployment/${{ env.SERVICE_NAME }} ${{ env.SERVICE_NAME }}=nginx:latest --namespace  ${{ env.NAMESPACE }} 
+  
