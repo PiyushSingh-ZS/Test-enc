@@ -37,4 +37,5 @@ jobs:
 
       - name: Deploy to AKS
         run: kubectl set image deployment/${{ env.APP_NAME }} ${{ env.APP_NAME }}=nginx:latest --namespace  ${{ env.NAMESPACE }} 
+        
   
