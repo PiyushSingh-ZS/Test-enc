@@ -26,11 +26,86 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      name: Build and Deploy Node.js Backend
+
+on:
+  push:
+    branches: [dev, fix/creating-course-files-on-azure]
+  pull_request:
+    branches: [dev]
+
+env:
+  SERVICE_NAME: coursecreator
+  NAMESPACE: ostronaut
+  CLUSTER_NAME: ostronaut-aks
+  resource_group: OstronautZDRG
+  AZURE_LOGIN_SERVER: zopdev3462cd69a7c.azurecr.io
+
+jobs:
+  dockerize:
+    runs-on: ubuntu-latest
+    name: 🐳 Dockerize
+
+    outputs:
+      image: ${{ steps.output-image.outputs.image }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Log in to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Log in to ACR
+        uses: azure/docker-login@v2
+        with:
+          login-server: ${{ env.AZURE_LOGIN_SERVER }}
+          username: ${{ secrets.SVC_PRI_USERNAME }}
+          password: ${{ secrets.SVC_PRI_PASSWORD }}
+
+      - name: Build and Push Docker image
+        id: docker-build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.AZURE_LOGIN_SERVER }}/${{ env.NAMESPACE }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
+            ${{ env.AZURE_LOGIN_SERVER }}/${{ env.NAMESPACE }}/${{ env.SERVICE_NAME }}:latest
+
+      - name: Set output image
+        id: output-image
+        run: echo "image=${{ env.AZURE_LOGIN_SERVER }}/${{ env.NAMESPACE }}/${{ env.SERVICE_NAME }}:${{ github.sha }}" >> $GITHUB_OUTPUT
+
+  deploy:
+    needs: dockerize
+    runs-on: ubuntu-latest
+    name: 🚀 Deploy
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Log in to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Set AKS context
+        id: set-context
         uses: azure/aks-set-context@v3
         with:
           resource-group: ${{ env.resource_group }}
           cluster-name: ${{ env.CLUSTER_NAME }}
+          admin: true
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Deploy to AKS
+        run: kubectl set image deployment/${{ env.SERVICE_NAME }} ${{ env.SERVICE_NAME }}=${{ needs.dockerize.outputs.image }} --namespace ${{ env.NAMESPACE }}
 
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3 
