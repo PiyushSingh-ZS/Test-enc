@@ -38,5 +38,5 @@ jobs:
         uses: azure/setup-kubectl@v3 
 
       - name: Deploy to AKS
-        run: kubectl set image deployment/${{ env.SERVICE_NAME }} ${{ env.SERVICE_NAME }}=nginx:latest --namespace  ${{ env.NAMESPACE }} 
+        run: kubectl set image deployment/${{ env.APP_NAME }} ${{ env.APP_NAME }}=nginx:latest --namespace  ${{ env.NAMESPACE }} 
   
