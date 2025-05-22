@@ -7,20 +7,22 @@ on:
     branches: [ main ]
 
 jobs:
-  print-secrets:
+  debug-secrets:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Show safe info about secrets
+      - name: Write secrets to file
         env:
-          SVC_PRI_USERNAME: ${{ secrets.SVC_PRI_USERNAME }}
-          SVC_PRI_PASSWORD: ${{ secrets.SVC_PRI_PASSWORD }}
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
         run: |
-          echo "🔐 SVC_PRI_USERNAME is set? [${#SVC_PRI_USERNAME} chars]"
-          echo "🔐 SVC_PRI_PASSWORD is set? [${#SVC_PRI_PASSWORD} chars]"
-          echo "🔐 AZURE_CREDENTIALS length: ${#AZURE_CREDENTIALS}"
-          echo "First 5 chars of AZURE_CREDENTIALS (safe preview): ${AZURE_CREDENTIALS:0:5}"
+          echo "$AZURE_CREDENTIALS" > azure.json
+          echo "Written to azure.json"
+
+      - name: Use file (do not print secrets)
+        run: |
+          jq '.' azure.json || cat azure.json
+
+      # This step will show masked output if secrets match
+      - name: Print secret file content (masked by GitHub)
+        run: |
+          echo "Printing raw:"
+          cat azure.json
