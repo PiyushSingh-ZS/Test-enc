@@ -12,21 +12,20 @@ jobs:
 
     steps:
       - name: Write secrets to JSON file
-    env:
-      SVC_PRI_USERNAME: ${{ secrets.SVC_PRI_USERNAME }}
-      SVC_PRI_PASSWORD: ${{ secrets.SVC_PRI_PASSWORD }}
-      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-    run: |
-      jq -n \
-        --arg username "$SVC_PRI_USERNAME" \
-        --arg password "$SVC_PRI_PASSWORD" \
-        --argjson credentials "$AZURE_CREDENTIALS" \
-        '{SVC_PRI_USERNAME: $username, SVC_PRI_PASSWORD: $password, AZURE_CREDENTIALS: $credentials}' > secrets.json
-
-    echo "✅ Secrets written to secrets.json"
-      - name: Show file structure (partial visibility)
+        env:
+          SVC_PRI_USERNAME: ${{ secrets.SVC_PRI_USERNAME }}
+          SVC_PRI_PASSWORD: ${{ secrets.SVC_PRI_PASSWORD }}
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
         run: |
-          jq 'keys' secrets.json
+          jq -n \
+            --arg username "$SVC_PRI_USERNAME" \
+            --arg password "$SVC_PRI_PASSWORD" \
+            --argjson credentials "$AZURE_CREDENTIALS" \
+            '{SVC_PRI_USERNAME: $username, SVC_PRI_PASSWORD: $password, AZURE_CREDENTIALS: $credentials}' > secrets.json
+           echo "✅ Secrets written to secrets.json"
+      - name: Show file structure (partial visibility)
+            run: |
+              jq 'keys' secrets.json
 
       # ✅ Best: Upload as artifact and download securely
       - name: Upload secret file as artifact
