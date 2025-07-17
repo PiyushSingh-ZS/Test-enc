@@ -7,35 +7,27 @@ on:
     branches: [ main ]
 
 env:
-  APP_NAME: service1
-  NAMESPACE: app1
-  CLUSTER_NAME: cl22may-aks
-  resource_group: Testing-migration
-  AZURE_LOGIN_SERVER: zopdevcc09cb5dc9a.azurecr.io
+  SERVICE_NAME: serv2
+  NAMESPACE: eazy-updates-staging
+  CLUSTER_NAME: stage17july
+  CLUSTER_PROJECT: devandstage
+  GAR_PROJECT: devandstage
+  GAR_REGISTRY: zop-dev
 
 jobs:
-  
-
-  deployment:
+  dockerize:
     runs-on: ubuntu-latest
-    name: Deploy
-    steps:
-      - name: Azure login
-        id: login
-        uses: azure/login@v1.4.3
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: Set AKS context
-        id: set-context
-        uses: azure/aks-set-context@v3
-        with:
-          resource-group: ${{ env.resource_group }}
-          cluster-name: ${{ env.CLUSTER_NAME }}
-          admin: true
-      - name: Setup kubectl
-        uses: azure/setup-kubectl@v3 
+    name: 🐳 Dockerize
 
-      - name: Deploy to AKS
-        run: kubectl set image deployment/${{ env.APP_NAME }} ${{ env.APP_NAME }}=nginx:latest --namespace  ${{ env.NAMESPACE }} 
-        
-  
+
+    steps:
+     
+
+      - name: Login to GAR
+        uses: docker/login-action@v2
+        with:
+          registry: us-central1-docker.pkg.dev
+          username: _json_key
+          password: ${{ secrets.SERV2_EAZY_UPDATES_STAGING_DEPLOYMENT_KEY }}
+
+   
